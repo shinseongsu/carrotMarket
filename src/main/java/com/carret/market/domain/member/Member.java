@@ -1,7 +1,6 @@
-package com.carret.market.member.domain;
+package com.carret.market.domain.member;
 
-import com.carret.market.config.jpa.BaseEntity;
-import com.carret.market.member.constanct.Roletype;
+import com.carret.market.domain.base.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;

@@ -1,8 +1,8 @@
-package com.carret.market.auth.service;
+package com.carret.market.config.security.service;
 
-import com.carret.market.auth.user.UserDetail;
-import com.carret.market.member.domain.Member;
-import com.carret.market.member.service.MemberService;
+import com.carret.market.config.security.user.UserDetail;
+import com.carret.market.domain.member.Member;
+import com.carret.market.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

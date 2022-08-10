@@ -1,7 +1,7 @@
-package com.carret.market.member.service;
+package com.carret.market.service.member;
 
-import com.carret.market.member.domain.Member;
-import com.carret.market.member.repository.MemberRepository;
+import com.carret.market.domain.member.Member;
+import com.carret.market.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

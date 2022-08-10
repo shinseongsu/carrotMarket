@@ -1,4 +1,4 @@
-package com.carret.market.main.controller;
+package com.carret.market.web.main;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

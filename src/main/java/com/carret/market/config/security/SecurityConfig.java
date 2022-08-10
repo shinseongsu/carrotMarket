@@ -1,8 +1,8 @@
 package com.carret.market.config.security;
 
-import com.carret.market.auth.handler.LoginFailHandler;
-import com.carret.market.auth.handler.LoginSuccessHandler;
-import com.carret.market.auth.service.AuthUserDetailsService;
+import com.carret.market.config.security.handler.LoginFailHandler;
+import com.carret.market.config.security.handler.LoginSuccessHandler;
+import com.carret.market.config.security.service.AuthUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

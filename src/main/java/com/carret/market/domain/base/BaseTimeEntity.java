@@ -1,4 +1,4 @@
-package com.carret.market.config.jpa;
+package com.carret.market.domain.base;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;

@@ -1,4 +1,4 @@
-package com.carret.market.member.constanct;
+package com.carret.market.domain.member;
 
 public enum Roletype {
     ROLE_MEMBER,

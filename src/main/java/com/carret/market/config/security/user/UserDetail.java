@@ -1,6 +1,6 @@
-package com.carret.market.auth.user;
+package com.carret.market.config.security.user;
 
-import com.carret.market.member.domain.Member;
+import com.carret.market.domain.member.Member;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

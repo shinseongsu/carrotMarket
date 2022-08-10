@@ -1,4 +1,4 @@
-package com.carret.market.auth.handler;
+package com.carret.market.config.security.handler;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

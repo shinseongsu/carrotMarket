@@ -1,4 +1,4 @@
-package com.carret.market.config.jpa;
+package com.carret.market.domain.base;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;

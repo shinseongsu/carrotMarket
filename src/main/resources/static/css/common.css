@@ -185,6 +185,12 @@ input[id="remember"]:checked + label + .keep_login_info {
   color: #555;
 }
 
+.field-error {
+  padding-bottom: 10px;
+  color: red;
+  border-color: red;
+}
+
 @media (max-width: 768px) {
   .login_form {
     width: 90%;

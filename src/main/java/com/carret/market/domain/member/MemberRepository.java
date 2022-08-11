@@ -1,6 +1,5 @@
 package com.carret.market.domain.member;
 
-import com.carret.market.domain.member.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -2,7 +2,7 @@ package com.carret.market.config.security;
 
 import com.carret.market.config.security.handler.LoginFailHandler;
 import com.carret.market.config.security.handler.LoginSuccessHandler;
-import com.carret.market.config.security.service.AuthUserDetailsService;
+import com.carret.market.service.auth.AuthUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LoginFailHandler loginFailHandler;
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 

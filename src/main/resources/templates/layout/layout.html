@@ -19,6 +19,18 @@
 
     <!-- 사용자 정의 script -->
     <th:block layout:fragment="script"></th:block>
+    <script type="text/javascript">
+      const $pwVisible = document.querySelectorAll(".pw_visible");
+
+      const togleType = (e) => {
+        const $togleInput = e.target.previousElementSibling;
+        const currentType = $togleInput.getAttribute('type');
+
+        $togleInput.setAttribute('type', currentType == 'password' ? 'text' : 'password');
+        e.target.classList.toggle('opened');
+      }
+      $pwVisible.forEach(element => element.addEventListener('click', togleType));
+    </script>
 
   </body>
 </html>

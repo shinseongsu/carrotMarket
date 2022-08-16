@@ -40,7 +40,7 @@ public class RegisterValidate implements Validator {
         Optional<Member> optionalMember = memberService.findByEmail(memberRegisterDto.getEmail());
 
         if(optionalMember.isPresent()) {
-            errors.rejectValue("existsEmail", "", "이미 존재하는 이메일입니다.");
+            errors.reject("existsEmail", "이미 존재하는 이메일입니다.");
             return;
         }
     }

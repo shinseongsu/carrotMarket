@@ -1,17 +1,22 @@
 package com.carret.market.web.main;
 
+import com.carret.market.service.item.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequiredArgsConstructor
 public class MainController {
 
-    @GetMapping("/")
-    public ModelAndView main(ModelAndView mav) {
-        mav.setViewName("main/main");
+    private final ItemService itemService;
 
-        return mav;
+    @GetMapping("/")
+    public String main(Model model) {
+        model.addAttribute("itemList", itemService.findByItemList());
+
+        return "/main/main";
     }
 
 }

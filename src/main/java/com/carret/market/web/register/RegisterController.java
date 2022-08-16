@@ -25,7 +25,7 @@ public class RegisterController {
     private final RegisterValidate registerValidate;
 
     @InitBinder
-    public void itemRegisterBinder(WebDataBinder webDataBinder){
+    public void registerBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(registerValidate);
     }
 
@@ -33,7 +33,7 @@ public class RegisterController {
     public String registerView(Model model) {
         model.addAttribute("memberRegisterDto", new MemberRegisterDto());
 
-        return "/register/register";
+        return "/member/register";
     }
 
     @PostMapping
@@ -41,12 +41,12 @@ public class RegisterController {
         BindingResult errors) throws IOException {
 
         if(errors.hasErrors()) {
-            return "/register/register";
+            return "/member/register";
         }
 
         memberService.save(memberRegisterDto);
 
-        return "/login/login";
+        return "redirect:/login";
     }
 
 }

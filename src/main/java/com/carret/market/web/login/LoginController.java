@@ -15,7 +15,7 @@ public class LoginController {
             model.addAttribute("errorMessage", "로그인 실패하였습니다.");
         }
 
-        return "/login/login";
+        return "/member/login";
     }
 
 }

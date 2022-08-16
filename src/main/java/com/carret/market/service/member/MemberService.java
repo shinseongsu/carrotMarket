@@ -2,10 +2,12 @@ package com.carret.market.service.member;
 
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
+import com.carret.market.domain.member.Roletype;
 import com.carret.market.file.FileService;
 import com.carret.market.file.UploadFile;
 import com.carret.market.web.register.dto.MemberRegisterDto;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +28,13 @@ public class MemberService {
         UploadFile uploadFile = fileService.storeFile(memberRegisterDto.getPreviewUrl());
 
         memberRepository.save(
-            Member.of(memberRegisterDto.getEmail(),
+            new Member(memberRegisterDto.getEmail(),
                 passwordEncoder.encode(memberRegisterDto.getPassword()),
-                memberRegisterDto.getName(), memberRegisterDto.getNickname(),
-                Objects.isNull(uploadFile) ? null : uploadFile.getStoreFileName()));
+                memberRegisterDto.getName(),
+                memberRegisterDto.getNickname(),
+                Roletype.ROLE_MEMBER,
+                Objects.isNull(uploadFile) ? null : uploadFile.getStoreFileName(),
+                LocalDateTime.now()));
     }
 
     public Optional<Member> findByEmail(String email) {

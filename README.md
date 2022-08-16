@@ -17,3 +17,32 @@
 - front는 thymeleaf로 만들것같은데.. 다국어 지원도 해보고 싶었다.
 
 ![laguage](./docs/language.png)
+
+
+### 사용한 라이브러리
+
+- java
+- spring boot
+- spring mvc
+- postgreSQL
+- spring jpa
+
+
+## 1차적으로 만든 결과물
+
+- [x] 회원가입 화면
+
+![register](./docs/registerForm.png)
+
+- [x] 로그인 화면
+
+![login](./docs/loginForm.png)
+
+- [x] 중고 상품 등록 
+
+![item](./docs/item.png)
+
+- [x] 메인화면
+
+![main](./docs/main.png)
+

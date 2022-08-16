@@ -22,65 +22,26 @@
       <div class="w-4/5 h-4/5 m-auto pt-5">
         <h1 class="font-bold pb-5">중고거래</h1>
         <div class="flex flex-wrap justify-around">
-          <article class="product relative">
-            <img class="w-50 h-60" src="https://dnvefa72aowie.cloudfront.net/origin/article/202207/28562E4E982DB440E42BABCB9849AD8CFA2E456DC33D87A01FA5CEA370079B34.jpg?q=95&s=1440x1440&t=inside">
-            <div class="absolute">
-              <p>새제품 슈펜 신발 Shoopen.</p>
-              <p>서울 송파구 잠실7동</p>
-              <div class="flex justify-between">
-                <p>29,000원</p>
-                <div class="flex my-auto">
-                  <img class="w-4 h-4 mr-1" th:src="@{/images/common/love.png}">
-                  <p class="text-xs">1</p>
-                </div>
-              </div>
-            </div>
-          </article>
 
-          <article class="product relative">
-            <img class="w-50 h-60" src="https://dnvefa72aowie.cloudfront.net/origin/article/202207/28562E4E982DB440E42BABCB9849AD8CFA2E456DC33D87A01FA5CEA370079B34.jpg?q=95&s=1440x1440&t=inside">
-            <div class="absolute">
-              <p>새제품 슈펜 신발 Shoopen.</p>
-              <p>서울 송파구 잠실7동</p>
-              <div class="flex justify-between">
-                <p>29,000원</p>
-                <div class="flex my-auto">
-                  <img class="w-4 h-4 mr-1" th:src="@{/images/common/love.png}">
-                  <p class="text-xs">1</p>
+          <th:block th:each="item : ${itemList}">
+            <a th:herf="@{/item/{itemId}(itemId=${item.itemId})}">
+              <article class="product relative">
+                <img class="w-50 h-60" th:src="@{/images/{thumbnail}(thumbnail=${item.thumbnail})}">
+                <div class="absolute w-full">
+                  <p th:text="${item.title}">타이틀 화면</p>
+                  <p th:text="${item.location}">지역</p>
+                  <div class="flex justify-between">
+                    <p th:text="${item.price}+'원'">29,000원</p>
+                    <div class="flex my-auto">
+                      <img class="w-4 h-4 mr-1" th:src="@{/images/common/love.png}">
+                      <p class="text-xs" th:text="${item.likeCount}">1</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </article>
+              </article>
+            </a>
+          </th:block>
 
-          <article class="product relative">
-            <img class="w-50 h-60" src="https://dnvefa72aowie.cloudfront.net/origin/article/202207/28562E4E982DB440E42BABCB9849AD8CFA2E456DC33D87A01FA5CEA370079B34.jpg?q=95&s=1440x1440&t=inside">
-            <div class="absolute">
-              <p>새제품 슈펜 신발 Shoopen.</p>
-              <p>서울 송파구 잠실7동</p>
-              <div class="flex justify-between">
-                <p>29,000원</p>
-                <div class="flex my-auto">
-                  <img class="w-4 h-4 mr-1" th:src="@{/images/common/love.png}">
-                  <p class="text-xs">1</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article class="product relative">
-            <img class="w-50 h-60" src="https://dnvefa72aowie.cloudfront.net/origin/article/202207/28562E4E982DB440E42BABCB9849AD8CFA2E456DC33D87A01FA5CEA370079B34.jpg?q=95&s=1440x1440&t=inside">
-            <div class="absolute">
-              <p>새제품 슈펜 신발 Shoopen.</p>
-              <p>서울 송파구 잠실7동</p>
-              <div class="flex justify-between">
-                <p>29,000원</p>
-                <div class="flex my-auto">
-                  <img class="w-4 h-4 mr-1" th:src="@{/images/common/love.png}">
-                  <p class="text-xs">1</p>
-                </div>
-              </div>
-            </div>
-          </article>
         </div>
       </div>
       <div class="text-center p-3 border-solid border-t-2 cursor-pointer">

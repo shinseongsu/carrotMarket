@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="text-center font-bold text-orange-500 text-2xl" >로그인</h1>
+
+        <form class="login_form mx-auto" method="post" th:action="@{/login}">
+          <section>
+            <div class="login_input_wrap">
+              <label for="email" class="login_label"
+              ><img th:src="@{/images/common/mail.png}" alt="아이디" class="login_icon"
+              /></label>
+              <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  class="login_input"
+                  placeholder="아이디(이메일)"
+                  tabIndex="1"
+              />
+            </div>
+          </section>
+          <div class="login_input_wrap">
+            <label for="password" class="login_label"
+            ><img th:src="@{/images/common/password.png}" alt="비밀번호" class="login_icon"
+            /></label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                class="login_input"
+                placeholder="비밀번호"
+                tabIndex="2"
+            />
+            <a class="pw_visible"></a>
+          </div>
+          <p class="field-error" th:text="${errorMessage}"></p>
+
+          <div class="login_util">
+            <div class="keep_login_wrap">
+              <input type="checkbox" id="remember" />
+              <label for="remember">
+                <span class="checkbox" tabIndex="4"></span>
+                자동 로그인
+              </label>
+              <p class="keep_login_info">
+                개인 정보 보호를 위해 본인 기기에서만 이용해주세요
+              </p>
+            </div>
+
+            <!-- 아이디/비밀번호 (찾기) -->
+            <div tabIndex="5">
+              <a href="#none" class="find_id_pw"
+              >아이디(이메일)/비밀번호 찾기</a>
+            </div>
+
+          </div>
+          <input type="submit" class="btn login" value="로그인" />
+          <input type="button" class="btn sign_up" onClick="location.href='/register'" value="회원가입" />
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+</html>

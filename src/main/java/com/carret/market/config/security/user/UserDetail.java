@@ -1,7 +1,5 @@
 package com.carret.market.config.security.user;
 
-import com.carret.market.domain.member.Roletype;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -12,36 +10,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 public class UserDetail implements UserDetails {
-    private static final String ROLE = "ROLE";
-    private static final String DELIMETER = "_";
+    private static final String BASIC_IMAGE = "/images/common/profile.png";
+    private static final String BASIC_IMAGE_PATH = "/images/";
 
-    private final String name;
-    private final String email;
-    private final String password;
-    private final String previewUrl;
-    private final List<GrantedAuthority> authorities = new ArrayList<>();
+    private final MemberDetail memberDetail;
 
-    public UserDetail(String name, String email, String password, String previewUrl, Roletype roletype) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.previewUrl = previewUrl;
-        authorities.add(new SimpleGrantedAuthority(roletype.name()));
+    public UserDetail(MemberDetail memberDetail) {
+        this.memberDetail = memberDetail;
+    }
+
+    public String getPreviewUrl() {
+        String previewUl = memberDetail.getPreviewUrl();
+        return Objects.isNull(previewUl) ? BASIC_IMAGE : BASIC_IMAGE_PATH + previewUl;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return List.of(new SimpleGrantedAuthority(memberDetail.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return this.password;
+        return memberDetail.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.name;
+        return memberDetail.getName();
     }
 
     @Override

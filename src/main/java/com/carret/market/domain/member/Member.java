@@ -1,5 +1,6 @@
 package com.carret.market.domain.member;
 
+import com.carret.market.config.security.user.MemberDetail;
 import com.carret.market.domain.base.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -11,13 +12,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements MemberDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,16 +52,34 @@ public class Member extends BaseEntity {
         this.joinedAt = joinedAt;
     }
 
-    public static Member of(String email, String password, String name, String nickname, String previewUrl) {
-        return Member.builder()
-            .email(email)
-            .password(password)
-            .name(name)
-            .nickname(nickname)
-            .previewUrl(previewUrl)
-            .role(Roletype.ROLE_MEMBER)
-            .joinedAt(LocalDateTime.now())
-            .build();
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getNickname() {
+        return nickname;
+    }
+
+    @Override
+    public Roletype getRole() {
+        return role;
+    }
+
+    @Override
+    public String getPreviewUrl() {
+        return previewUrl;
     }
 
 }

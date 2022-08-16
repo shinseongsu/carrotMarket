@@ -1,8 +1,8 @@
 spring:
   # devtools
-  devtools:
-    livereload:
-      enabled: true
+  ## devtools:
+  ##  livereload:
+  ##    enabled: true
 
   thymeleaf:
     cache: false

@@ -22,4 +22,4 @@ logging:
 
 file:
   upload:
-    path: /Users/mac/Desktop/sideProject/carrotMarket/src/main/resources/images/profile/
+    path: /Users/mac/Desktop/sideProject/carrotMarket/src/main/resources/static/images/

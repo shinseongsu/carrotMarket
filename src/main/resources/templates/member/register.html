@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    .preview_wrap {
+      margin-bottom: 20px;
+      width: 100%;
+      height: 50px;
+      border: 1px solid #cccccc;
+    }
+
+    .filebox {
+      width: 100%;
+      line-height: 40px;
+    }
+
+    .filebox .upload-name {
+      display: inline-block;
+      height: 40px;
+      padding-left: 5px;
+      vertical-align: middle;
+      border: 1px solid #dddddd;
+      width: 80%;
+      color: #999999;
+      margin-left: -1px;
+    }
+
+    .filebox label {
+      display: inline-block;
+      padding: 0px 15px;
+      color: #fff;
+      vertical-align: middle;
+      background-color: #999999;
+      cursor: pointer;
+      height: 40px;
+      margin: 0 auto;
+      font-size: 15px;
+    }
+
+    .filebox input[type="file"] {
+      position: absolute;
+      width: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="text-center font-bold text-orange-500 text-2xl">회원가입</h1>
+
+        <form class="login_form mx-auto" th:action="@{/register}" enctype="multipart/form-data" role="form"
+              th:object="${memberRegisterDto}" method="post">
+          <div class="login_input_wrap">
+            <label for="email" class="login_label">
+              <img th:src="@{/images/common/mail.png}" alt="아이디" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="email"
+                name="email"
+                class="login_input"
+                placeholder="아이디(이메일)"
+                th:field="*{email}"
+            />
+          </div>
+          <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+          <div class="login_input_wrap">
+            <label for="name" class="login_label">
+              <img th:src="@{/images/common/name.png}" alt="이름" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                class="login_input"
+                placeholder="이름"
+                th:field="*{name}"
+            />
+          </div>
+          <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+          <div class="login_input_wrap">
+            <label for="nickname" class="login_label">
+              <img th:src="@{/images/common/name.png}" alt="닉네임" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="nickname"
+                name="nickname"
+                class="login_input"
+                placeholder="닉네임"
+                th:field="*{nickname}"
+            />
+          </div>
+          <p class="field-error" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></p>
+
+          <div class="login_input_wrap">
+            <label for="password" class="login_label"
+            ><img th:src="@{/images/common/password.png}" alt="비밀번호" class="login_icon"
+            /></label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                class="login_input"
+                placeholder="비밀번호"
+                th:field="*{password}"
+            />
+            <a class="pw_visible"></a>
+          </div>
+          <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+
+          <div class="login_input_wrap">
+            <label for="passwordConfirm" class="login_label"
+            ><img th:src="@{/images/common/password.png}" alt="비밀번호" class="login_icon"
+            /></label>
+            <input
+                type="password"
+                id="passwordConfirm"
+                name="passwordConfirm"
+                class="login_input"
+                placeholder="비밀번호 확인"
+                th:field="*{passwordConfirm}"
+            />
+            <a class="pw_visible"></a>
+          </div>
+          <p class="field-error" th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}"></p>
+
+          <div class="login_input_wrap">
+            <div class="filebox flex justify-between">
+              <input class="upload-name" placeholder="대표 이미지" readonly/>
+              <label for="previewUrl">파일찾기</label>
+              <input type="file" id="previewUrl" name="previewUrl" th:errorclass="field-error"
+                     th:field="*{previewUrl}" />
+            </div>
+          </div>
+
+          <div class="preview_wrap h-40 ">
+            <p class="pl-3 pb-7 mt-3 border-solid border-b-2 border-gray-300 w-full h-5">미리보기</p>
+            <div class="pt-5 w-full">
+              <div class="w-20 h-30 m-auto">
+                <img id="preview-image" class="w-full h-full"
+                     th:src="@{/images/common/profile.png}"/>
+              </div>
+            </div>
+          </div>
+          <p class="field-error" th:each="error : ${#fields.globalErrors()}" th:text="${error}"></p>
+          <button type="submit" class="btn sign_up">회원가입</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+
+</div>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script type="text/javascript">
+    const $inputImage = document.getElementById('previewUrl');
+
+    const readImage = input => {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = e => {
+          const previewImage = document.getElementById('preview-image');
+          previewImage.src = e.target.result;
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $inputImage.addEventListener('change', e => readImage(e.target));
+  </script>
+</th:block>
+
+</html>

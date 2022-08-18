@@ -1,0 +1,11 @@
+spring:
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/market
+    username: admin
+    password: 0000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.PostgreSQL10Dialect

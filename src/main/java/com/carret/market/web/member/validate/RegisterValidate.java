@@ -1,8 +1,8 @@
-package com.carret.market.web.register.validate;
+package com.carret.market.web.member.validate;
 
 import com.carret.market.domain.member.Member;
 import com.carret.market.service.member.MemberService;
-import com.carret.market.web.register.dto.MemberRegisterDto;
+import com.carret.market.web.member.dto.MemberRegisterDto;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

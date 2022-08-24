@@ -1,7 +1,6 @@
-package com.carret.market.web.register.dto;
+package com.carret.market.web.member.dto;
 
 import java.util.Objects;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

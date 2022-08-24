@@ -1,8 +1,8 @@
-package com.carret.market.web.register;
+package com.carret.market.web.member;
 
 import com.carret.market.service.member.MemberService;
-import com.carret.market.web.register.dto.MemberRegisterDto;
-import com.carret.market.web.register.validate.RegisterValidate;
+import com.carret.market.web.member.dto.MemberRegisterDto;
+import com.carret.market.web.member.validate.RegisterValidate;
 import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;

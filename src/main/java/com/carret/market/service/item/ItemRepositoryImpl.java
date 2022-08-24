@@ -1,8 +1,9 @@
 package com.carret.market.service.item;
 
-import com.carret.market.domain.item.QItem;
-import com.carret.market.domain.item.QItemImage;
-import com.carret.market.domain.like.QLikes;
+import static com.carret.market.domain.item.QItem.item;
+import static com.carret.market.domain.item.QItemImage.itemImage;
+import static com.carret.market.domain.like.QLikes.likes;
+
 import com.carret.market.web.item.dto.ItemListDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,10 +16,6 @@ import org.springframework.stereotype.Repository;
 public class ItemRepositoryImpl implements ItemRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
-
-    QItem item = QItem.item;
-    QItemImage itemImage = QItemImage.itemImage;
-    QLikes likes = QLikes.likes;
 
     @Override
     public List<ItemListDto> findByItemListPaging() {

@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,11 +40,13 @@ public class Member extends BaseEntity implements MemberDetail {
 
     private String previewUrl;
 
+    private String geolocation;
+
     private LocalDateTime joinedAt;
 
     @Builder
     public Member(String email, String password, String name, String nickname,
-        Roletype role, String previewUrl, LocalDateTime joinedAt) {
+        Roletype role, String previewUrl, LocalDateTime joinedAt, String geolocation) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -50,6 +54,19 @@ public class Member extends BaseEntity implements MemberDetail {
         this.role = role;
         this.previewUrl = previewUrl;
         this.joinedAt = joinedAt;
+        this.geolocation = geolocation;
+    }
+
+    public void changeInfo(String nickname, String previewUrl, String geolocation) {
+        if(!ObjectUtils.isEmpty(nickname)) {
+            this.nickname = nickname;
+        }
+        if(!ObjectUtils.isEmpty(previewUrl)) {
+            this.previewUrl = previewUrl;
+        }
+        if(!ObjectUtils.isEmpty(geolocation)) {
+            this.geolocation = geolocation;
+        }
     }
 
     @Override
@@ -82,4 +99,8 @@ public class Member extends BaseEntity implements MemberDetail {
         return previewUrl;
     }
 
+    @Override
+    public String getGeolocation() {
+        return geolocation;
+    }
 }

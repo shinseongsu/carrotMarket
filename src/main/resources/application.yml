@@ -23,3 +23,7 @@ logging:
 file:
   upload:
     path: /Users/mac/Desktop/sideProject/carrotMarket/src/main/resources/static/images/
+
+naver:
+  client-id: pcd8jmjyyg
+  client-secret: CJH9jTRTVlTRjc2oCD4OvXtBABBkFJ5a0YSzZU1f

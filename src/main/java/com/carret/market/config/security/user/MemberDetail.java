@@ -16,4 +16,6 @@ public interface MemberDetail {
 
     String getPreviewUrl();
 
+    String getGeolocation();
+
 }

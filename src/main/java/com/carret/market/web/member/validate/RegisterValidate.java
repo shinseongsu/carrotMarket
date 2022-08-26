@@ -3,6 +3,7 @@ package com.carret.market.web.member.validate;
 import com.carret.market.domain.member.Member;
 import com.carret.market.service.member.MemberService;
 import com.carret.market.web.member.dto.MemberRegisterDto;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ public class RegisterValidate implements Validator {
             MemberRegisterDto memberRegisterDto = (MemberRegisterDto) target;
 
             isNotEqualsPassword(errors, memberRegisterDto);
+            isExisisLocation(errors, memberRegisterDto);
             isExsitsEmail(errors, memberRegisterDto);
         }
     }
@@ -41,6 +43,13 @@ public class RegisterValidate implements Validator {
 
         if(optionalMember.isPresent()) {
             errors.reject("existsEmail", "이미 존재하는 이메일입니다.");
+            return;
+        }
+    }
+
+    private  void isExisisLocation(Errors errors, MemberRegisterDto memberRegisterDto) {
+        if(Objects.isNull(memberRegisterDto.getLocation())) {
+            errors.reject("existLocation", "위치 정보가 켜져 있어야 회원 가입 가능합니다.");
             return;
         }
     }

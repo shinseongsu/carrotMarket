@@ -16,7 +16,6 @@ public class GeoLocationController {
 
     private final GeolocationService geolocationService;
 
-    @Secured(value = "ROLE_USER")
     @PostMapping("/myGeolocation")
     public ResponseEntity<GeoLocationResponseDto> geolocationApi(@RequestBody GeoLocationRequestDto geoLocationRequestDto) {
         String area = geolocationService.searchGeolocation(geoLocationRequestDto);

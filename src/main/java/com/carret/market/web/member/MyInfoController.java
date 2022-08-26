@@ -4,6 +4,7 @@ import com.carret.market.config.security.authorization.AuthenticationPrincipal;
 import com.carret.market.config.security.user.MemberDetail;
 import com.carret.market.config.security.user.UserDetail;
 import com.carret.market.domain.member.Member;
+import com.carret.market.global.exception.MemberNotFoundException;
 import com.carret.market.service.member.MemberService;
 import com.carret.market.web.member.dto.ChangeStatusDto;
 import com.carret.market.web.member.dto.GeoLocationRequestDto;
@@ -31,7 +32,7 @@ public class MyInfoController {
     public String myInfoForm(@AuthenticationPrincipal UserDetail userDetail,
         Model model) {
         Member member = memberService.findByEmail(userDetail.getMemberDetail().getEmail())
-                .orElseThrow(() -> new RuntimeException("회원이 존재하지 않습니다."));
+                .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
         model.addAttribute("memberInfoDto", MemberInfoDto.of(member));
         return "/member/myInfo";

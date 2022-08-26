@@ -33,9 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // url 보안
         http.authorizeRequests()
-            .antMatchers("/", "/error", "/images/**", "/script/**", "/img/**", "/login", "/h2-console/**", "/register").permitAll()
+            .antMatchers("/", "/error", "/images/**", "/script/**", "/img/**", "/login", "/h2-console/**", "/register", "/myGeolocation").permitAll()
             .antMatchers("/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated();
+
+        http.csrf().disable();
 
         // X-Frame-Options header 이슈
         http.headers()

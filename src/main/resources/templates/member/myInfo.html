@@ -142,7 +142,6 @@
             </div>
           </div>
 
-          <input type="hidden" id="csrf" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
           <button id="change_button" type="button" class="btn sign_up">정보 수정</button>
         </form>
       </div>
@@ -158,8 +157,6 @@
     const $regionButton = document.getElementById('region_button');
     const $location = document.getElementById('location');
     const $changeButton = document.getElementById('change_button');
-    const header = document.querySelector('meta[name="_csrf_header"]').content;
-    const token = document.querySelector('meta[name="_csrf"]').content;
 
     const readImage = input => {
       if (input.files && input.files[0]) {
@@ -179,8 +176,6 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'header': header,
-          'X-CSRF-Token': token
         },
         body: JSON.stringify({
           coords: coords
@@ -222,10 +217,7 @@
 
       fetch('myInfo/changeInfo', {
         method: 'POST',
-        headers: {
-          'header': header,
-          'X-CSRF-Token': token
-        },
+        headers: { },
         body: formData
       })
       .then(response => {

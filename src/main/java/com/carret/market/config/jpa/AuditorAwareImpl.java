@@ -1,5 +1,6 @@
 package com.carret.market.config.jpa;
 
+import java.util.Objects;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     }
 
     private boolean isConvretAuthentication(Authentication authentication) {
-        return authentication instanceof AnonymousAuthenticationToken;
+        return authentication instanceof AnonymousAuthenticationToken || Objects.isNull(authentication);
     }
 
 }

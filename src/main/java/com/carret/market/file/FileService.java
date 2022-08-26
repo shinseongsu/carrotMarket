@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ public class FileService {
 
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
 
-        if(multipartFile.isEmpty()) {
+        if(Objects.isNull(multipartFile) || multipartFile.isEmpty()) {
             return null;
         }
 

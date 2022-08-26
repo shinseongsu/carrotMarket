@@ -24,8 +24,8 @@
         <div class="flex flex-wrap justify-around">
 
           <th:block th:each="item : ${itemList}">
-            <a th:herf="@{/item/{itemId}(itemId=${item.itemId})}">
-              <article class="product relative">
+            <article class="product relative">
+              <a th:href="@{/item/info?itemId={itemId}(itemId=${item.itemId})}" class="cursor-pointer">
                 <img class="w-50 h-60" th:src="@{/images/{thumbnail}(thumbnail=${item.thumbnail})}">
                 <div class="absolute w-full">
                   <p th:text="${item.title}">타이틀 화면</p>
@@ -38,8 +38,8 @@
                     </div>
                   </div>
                 </div>
-              </article>
-            </a>
+              </a>
+            </article>
           </th:block>
 
         </div>

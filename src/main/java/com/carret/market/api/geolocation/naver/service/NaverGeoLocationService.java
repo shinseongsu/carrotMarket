@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class NaverGeoLocationService implements GeoLocationApi {
     private final NaverGeoLocationFeignClient naverGeoLocationFeignClient;
 
+    private static final String JSON = "json";
+
     @Value("${naver.client-id}")
     private String clientId;
 
@@ -21,7 +23,7 @@ public class NaverGeoLocationService implements GeoLocationApi {
 
     @Override
     public GeoLocationResponse geoLocationApi(String coords) {
-        NaverGeoLocationResponse naverGeoLocationResponse = naverGeoLocationFeignClient.reverseGeocodApi(clientId, secretKey, coords, "json");
+        NaverGeoLocationResponse naverGeoLocationResponse = naverGeoLocationFeignClient.reverseGeocodApi(clientId, secretKey, coords, JSON);
 
         return new GeoLocationResponse(naverGeoLocationResponse.getArea());
     }

@@ -1,14 +1,20 @@
 package com.carret.market.service.item;
 
-import com.carret.market.domain.item.QItem;
-import com.carret.market.domain.item.QItemImage;
-import com.carret.market.domain.like.QLikes;
+import static com.carret.market.domain.item.QItem.item;
+import static com.carret.market.domain.item.QItemImage.itemImage;
+import static com.carret.market.domain.like.QLikes.likes;
+import static com.carret.market.domain.member.QMember.member;
+
+import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.ObjectUtils;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,12 +22,9 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    QItem item = QItem.item;
-    QItemImage itemImage = QItemImage.itemImage;
-    QLikes likes = QLikes.likes;
-
     @Override
     public List<ItemListDto> findByItemListPaging() {
+        // TODO 추후, paging 추가 및 검색 기능 추가(like)
         return jpaQueryFactory.select(
                 Projections.fields(ItemListDto.class,
                     item.id.as("itemId"),
@@ -33,11 +36,50 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
                 ))
             .from(item)
             .innerJoin(itemImage)
-                .on(itemImage.item.eq(item).and(itemImage.thumbnail.isTrue()))
+                .on(itemImage.item.eq(item)
+                    .and(itemImage.thumbnail.isTrue()))
+            .fetchJoin()
             .leftJoin(likes)
                 .on(likes.item.eq(item))
             .fetchJoin()
             .groupBy(item.id, itemImage.name)
             .fetch();
     }
+
+    @Override
+    public Optional<ItemInfoDto> findItemInfoByItemId(Long itemId) {
+        ItemInfoDto itemInfoDto = jpaQueryFactory.select(
+            Projections.constructor(ItemInfoDto.class,
+                    item.id,
+                    item.title,
+                    item.detail,
+                    item.price,
+                    item.location,
+                    ExpressionUtils.as(
+                        jpaQueryFactory.select(likes.id.count())
+                            .from(likes)
+                            .where(likes.item.eq(item))
+                        ,"likesCount"
+                    ),
+                    item.viewCount,
+                    member.previewUrl,
+                    member.nickname,
+                    item.category
+                ))
+            .from(item)
+            .innerJoin(member)
+                .on(item.member.eq(member))
+            .where(item.id.eq(itemId))
+            .fetchOne();
+
+        if(!ObjectUtils.isEmpty(itemInfoDto)) {
+            itemInfoDto.addImage(jpaQueryFactory.select(itemImage.url)
+                .from(itemImage)
+                .where(itemImage.item.id.eq(itemId))
+                .fetch());
+        }
+
+        return Optional.ofNullable(itemInfoDto);
+    }
+
 }

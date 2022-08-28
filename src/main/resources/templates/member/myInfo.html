@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+    .preview_wrap {
+      margin-bottom: 20px;
+      width: 100%;
+      height: 50px;
+      border: 1px solid #cccccc;
+    }
+
+    .filebox {
+      width: 100%;
+      line-height: 40px;
+    }
+
+    .filebox .upload-name {
+      display: inline-block;
+      height: 40px;
+      padding-left: 5px;
+      vertical-align: middle;
+      border: 1px solid #dddddd;
+      width: 80%;
+      color: #999999;
+      margin-left: -1px;
+    }
+
+    .filebox label {
+      display: inline-block;
+      padding: 0px 15px;
+      color: #fff;
+      vertical-align: middle;
+      background-color: #999999;
+      cursor: pointer;
+      height: 40px;
+      margin: 0 auto;
+      font-size: 15px;
+    }
+
+    .filebox input[type="file"] {
+      position: absolute;
+      width: 0;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      border: 0;
+    }
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="text-center font-bold text-orange-500 text-2xl">회원가입</h1>
+
+        <form name="form" class="login_form mx-auto" th:action="@{/changeInfo}" enctype="multipart/form-data" role="form"
+              th:object="${memberInfoDto}" method="post">
+          <div class="login_input_wrap">
+            <label for="email" class="login_label">
+              <img th:src="@{/images/common/mail.png}" alt="아이디" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="email"
+                name="email"
+                class="login_input"
+                placeholder="아이디(이메일)"
+                th:field="*{email}"
+                th:value="*{email}"
+                readonly
+            />
+          </div>
+
+          <div class="login_input_wrap">
+            <label for="name" class="login_label">
+              <img th:src="@{/images/common/name.png}" alt="이름" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                class="login_input"
+                placeholder="이름"
+                th:value="*{name}"
+                readonly
+            />
+          </div>
+
+          <div class="login_input_wrap">
+            <label for="nickname" class="login_label">
+              <img th:src="@{/images/common/name.png}" alt="닉네임" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="nickname"
+                name="nickname"
+                class="login_input"
+                placeholder="닉네임"
+                th:field="*{nickname}"
+                th:value="*{nickname}"
+            />
+          </div>
+
+          <div class="login_input_wrap">
+            <label for="location" class="login_label">
+              <img th:src="@{/images/common/geolocation.png}" alt="지역" class="login_icon"/>
+            </label>
+            <input
+                type="text"
+                id="location"
+                name="location"
+                class="login_input"
+                placeholder="아직 지역 설정이 되지 않았습니다."
+                th:field="*{location}"
+                th:value="*{location}"
+                readonly
+            />
+            <button type="button" id="region_button" class="hidden">지역 인증</button>
+          </div>
+
+          <div class="login_input_wrap">
+            <div class="filebox flex justify-between">
+              <input class="upload-name" placeholder="대표 이미지" readonly/>
+              <label for="previewUrl">파일찾기</label>
+              <input type="file" id="previewUrl" name="previewUrl" th:errorclass="field-error"
+                     th:field="*{previewUrl}" />
+            </div>
+          </div>
+
+          <div class="preview_wrap h-40 ">
+            <p class="pl-3 pb-7 mt-3 border-solid border-b-2 border-gray-300 w-full h-5">미리보기</p>
+            <div class="pt-5 w-full">
+              <div class="w-20 h-30 m-auto">
+                <img id="preview-image" class="w-full h-full"
+                     th:src="@{*{previewUrl}}"/>
+              </div>
+            </div>
+          </div>
+
+          <button id="change_button" type="button" class="btn sign_up">정보 수정</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<th:block layout:fragment="script">
+  <script type="text/javascript">
+    const $inputImage = document.getElementById('previewUrl');
+    const $regionButton = document.getElementById('region_button');
+    const $location = document.getElementById('location');
+    const $changeButton = document.getElementById('change_button');
+
+    const readImage = input => {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = e => {
+          const previewImage = document.getElementById('preview-image');
+          previewImage.src = e.target.result;
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    const saveLocation = (coords) => {
+      fetch('/myGeolocation', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          coords: coords
+        })
+      })
+        .then(response => {
+          if(!response.ok) {
+            throw new Error('에러가 발생하였습니다.')
+          }
+          return response.json()
+        })
+        .then(data => {
+          document.getElementById('location').value = data.area;
+        })
+        .catch((error) => {
+          toast(error);
+        })
+    }
+
+    const region = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          const coords = longitude + "," + latitude;
+
+          saveLocation(coords);
+        });
+      }
+    }
+
+    const changeInfo = () => {
+      let formData = new FormData();
+      formData.append('nickname', document.form.nickname.value);
+      formData.append('location', document.form.location.value);
+      for(let file of document.form.previewUrl.files) {
+        formData.append('previewUrl', file);
+      }
+
+      fetch('myInfo/changeInfo', {
+        method: 'POST',
+        headers: { },
+        body: formData
+      })
+      .then(response => {
+        if(!response.ok) {
+          throw new Error('에러가 발생하였습니다.')
+        }
+        return response.json()
+      })
+      .then(data => {
+        toast(data.message);
+      })
+      .catch((error) => {
+        toast(error);
+      })
+    }
+
+    $inputImage.addEventListener('change', e => readImage(e.target));
+    $regionButton.addEventListener('click', region);
+    $location.addEventListener('click', () => $regionButton.click());
+    $changeButton.addEventListener('click', changeInfo);
+  </script>
+</th:block>

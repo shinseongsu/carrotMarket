@@ -21,28 +21,57 @@
 
 ### 사용한 라이브러리
 
-- java
-- spring boot
-- spring mvc
-- postgreSQL
-- spring jpa
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/>&nbsp 
+  <img src="https://img.shields.io/badge/Javascript-ffb13b?style=flat-square&logo=javascript&logoColor=white"/>&nbsp 
+  <img src="https://img.shields.io/badge/css-1572B6?style=flat-square&logo=css3&logoColor=white"/>&nbsp
+  <img src="https://img.shields.io/badge/html-E34F26?style=flat-square&logo=html5&logoColor=white"/>&nbsp
+  <br>
+  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Springboot&logoColor=white"/>&nbsp 
+  <img src="https://img.shields.io/badge/postgreSQL-4169E1?style=flat-square&logo=postgreSQL&logoColor=white"/>&nbsp
+</p>
 
 
-## 1차적으로 만든 결과물
+## 진행 사항
 
-- [x] 회원가입 화면
+### ERD 상태
+
+![ERD](./docs/ERD.png)
+
+
+### 구현 기능
 
 ![register](./docs/registerForm.png)
 
-- [x] 로그인 화면
-
+- [x] 회원가입
+    - [x] 회원가입 기능구현 (회원가입 시, 위도경도 조회후 주소 저장)
+    - [x] 회원 화면 만들기
+    
 ![login](./docs/loginForm.png)
 
-- [x] 중고 상품 등록 
-
+- [x] 로그인 화면
+  - [x] 로그인 화면 만들기
+  - [x] 스프링 시큐리티로 로그인 구현
+  
 ![item](./docs/item.png)
 
-- [x] 메인화면
-
+- [x] 상품 등록
+  - [x] 상품 등록 화면 만들기
+  - [x] 상품 등록 기능 구현 
+  
 ![main](./docs/main.png)
 
+- [x] 메인화면
+  - [x] 현재 등록된 상품들을 보여준다.
+
+
+![mypage](./docs/myPage.png)
+
+- [x] 마이페이지
+  - 내 정보 수정 기능 추가
+  - 화면단 구성
+
+![item](./docs/itemPage.png)
+
+- [x] 상품 상세 페이지
+  - 데이터 가져오기 추가

@@ -5,6 +5,7 @@ import com.carret.market.config.security.user.UserDetail;
 import com.carret.market.domain.item.Category;
 import com.carret.market.domain.member.Member;
 import com.carret.market.service.item.ItemService;
+import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
 import com.carret.market.web.item.validate.ItemValidate;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(value = "/item")
@@ -57,6 +59,14 @@ public class ItemController {
         itemService.save(itemRequestDto, member);
 
         return "redirect:/";
+    }
+
+    @GetMapping("/info")
+    public String pageForm(@RequestParam Long itemId, Model model) {
+        ItemInfoDto itemInfoDto = itemService.findByItemId(itemId);
+        model.addAttribute("itemInfoDto", itemInfoDto);
+        
+        return "/item/itemInfo";
     }
 
 }

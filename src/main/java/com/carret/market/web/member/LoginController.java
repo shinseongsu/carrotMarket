@@ -1,4 +1,4 @@
-package com.carret.market.web.login;
+package com.carret.market.web.member;
 
 import java.util.Objects;
 import org.springframework.stereotype.Controller;

@@ -8,11 +8,14 @@ import com.carret.market.domain.item.ItemStatus;
 import com.carret.market.domain.member.Member;
 import com.carret.market.file.FileService;
 import com.carret.market.file.UploadFile;
+import com.carret.market.global.exception.ItemNotFoundException;
+import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,8 @@ public class ItemService {
     private final ItemImageRepository itemImageRepository;
     private final FileService fileService;
 
+    private static final String EMPTY_ITEM = "상품이 존재 하지 않습니다.";
+
     @Transactional(readOnly = true)
     public List<ItemListDto> findByItemList() {
         return itemRepository.findByItemListPaging();
@@ -40,14 +45,20 @@ public class ItemService {
             .price(itemRequestDto.getPrice())
             .status(ItemStatus.SELL)
             .category(itemRequestDto.getCategory())
-            .location("서울시 강남구") // TODO - 지리 API 사용 전 하드 코딩
+            .location(member.getGeolocation())
             .member(member)
+            .viewCount(0)
             .build();
 
         List<ItemImage> itemImageList = this.uploadFiles(itemRequestDto.getImageUrl(), item);
 
         itemRepository.save(item);
         itemImageRepository.saveAll(itemImageList);
+    }
+
+    public ItemInfoDto findByItemId(Long itemId) {
+        return itemRepository.findItemInfoByItemId(itemId)
+            .orElseThrow(() -> new ItemNotFoundException(EMPTY_ITEM));
     }
 
     private List<ItemImage> uploadFiles(List<MultipartFile> images, Item item) throws IOException {
@@ -60,7 +71,7 @@ public class ItemService {
 
                     itemImageList.add(ItemImage.builder()
                         .name(uploadFile.getStoreFileName())
-                        .url(uploadFile.getFileUploadUrl())
+                        .url(uploadFile.getStoreFileName())
                         .thumbnail(index == 0)
                         .originalName(uploadFile.getOriginalFileName())
                         .item(item)
@@ -69,6 +80,14 @@ public class ItemService {
             );
 
         return itemImageList;
+    }
+
+    @Transactional
+    public void viewCountIncrease(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+            .orElseThrow(() -> new ItemNotFoundException(EMPTY_ITEM));
+
+        item.viewCountIncrease();
     }
 
 }

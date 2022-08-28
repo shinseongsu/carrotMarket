@@ -8,4 +8,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-      dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

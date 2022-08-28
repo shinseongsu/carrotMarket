@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<!-- footer -->
+<!-- header -->
 <th:block th:fragment="header">
   <header class="bg-white h-20 w-full h-20  fixed align-middle z-50">
     <div class=" flex justify-between w-4/5 h-full mx-auto">
@@ -21,6 +21,9 @@
       </div>
     </div>
   </header>
+
+  <!-- 토스트 메시지 -->
+  <div id="toast"></div>
 
 </th:block>
 

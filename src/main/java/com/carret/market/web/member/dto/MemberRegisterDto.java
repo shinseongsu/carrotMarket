@@ -1,8 +1,8 @@
-package com.carret.market.web.register.dto;
+package com.carret.market.web.member.dto;
 
 import java.util.Objects;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,15 +27,18 @@ public class MemberRegisterDto {
 
     private String passwordConfirm;
     private MultipartFile previewUrl;
+    private String location;
 
+    @Builder
     public MemberRegisterDto(String email, String name, String nickname, String password,
-        String passwordConfirm, MultipartFile previewUrl) {
+        String passwordConfirm, MultipartFile previewUrl, String location) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
         this.password = password;
         this.passwordConfirm = passwordConfirm;
         this.previewUrl = previewUrl;
+        this.location = location;
     }
 
     public boolean isEqualsPassword() {

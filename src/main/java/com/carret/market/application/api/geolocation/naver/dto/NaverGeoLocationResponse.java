@@ -1,4 +1,4 @@
-package com.carret.market.api.geolocation.naver.dto;
+package com.carret.market.application.api.geolocation.naver.dto;
 
 import com.carret.market.global.exception.EmptyGeoLocationException;
 import java.util.Arrays;

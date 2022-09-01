@@ -139,7 +139,7 @@
           <div class="w-3/5 m-auto pt-4 flex justify-between">
             <div class="flex space-x-4">
               <div class="w-9 h-9">
-                <img th:src="@{/images/common/love.png}">
+                <img th:class="'likes '+ ${itemInfoDto.isOwnerLikes ? 'active' : ''}" />
               </div>
               <div class="flex">
                 <p class="font-medium" th:text="${itemInfoDto.price}">1,000</p>원
@@ -153,6 +153,7 @@
       </div>
     </section>
 
+    <input type="hidden" class="itemId" th:value="${itemInfoDto.itemId}" />
   </main>
 
 
@@ -165,9 +166,46 @@
     const items = document.querySelectorAll('.slide__item');
     const buttons = document.querySelector('.buttons');
     const paginations = document.querySelector('.paginations');
+    const $likes = document.querySelector('.likes');
+    const itemId = document.querySelector('.itemId').value;
     const lastIndex = items.length - 1;
     let selected = 0;
     let interval;
+
+    // 이미지 설정
+    let imageUrl = $likes.classList.contains('active') ? '/images/common/heart-active.svg'
+        : '/images/common/heart.svg';
+    $likes.setAttribute('src', imageUrl);
+
+    const likeSubscript = (itemId) => {
+      fetch('/item/subscript', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itemId: itemId
+        })
+      })
+      .then(resposne => {
+        if(!resposne.ok) {
+          throw new Error('에러가 발생하였습니다.')
+        }
+        return resposne.json();
+      })
+      .then(data => {
+        $likes.classList.toggle('active');
+        let imageUrl = $likes.classList.contains('active') ? '/images/common/heart-active.svg'
+            : '/images/common/heart.svg';
+        $likes.setAttribute('src', imageUrl);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast(error);
+      })
+    }
+
+    $likes.addEventListener('click', () => likeSubscript(itemId));
 
     // Util Functions
     const setTransition = (value) => {

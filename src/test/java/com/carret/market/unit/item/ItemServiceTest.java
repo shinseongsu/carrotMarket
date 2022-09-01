@@ -8,6 +8,7 @@ import com.carret.market.domain.item.ItemImage;
 import com.carret.market.domain.item.ItemImageRepository;
 import com.carret.market.domain.item.ItemRepository;
 import com.carret.market.domain.item.ItemStatus;
+import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.domain.member.Roletype;
@@ -40,6 +41,9 @@ public class ItemServiceTest {
 
     @Autowired
     ItemImageRepository itemImageRepository;
+
+    @Autowired
+    LikesRepository likesRepository;
 
     Member 회원;
 
@@ -92,6 +96,14 @@ public class ItemServiceTest {
         int viewCount = itemService.findByItemId(상품1.getId()).getViewCount();
 
         assertThat(viewCount).isEqualTo(1);
+    }
+
+    @DisplayName("관심수를 증가시킵니다.")
+    @Test
+    void subscriptTest() {
+        itemService.subscript(상품1.getId(), 회원);
+
+        assertThat(likesRepository.findAll()).hasSize(1);
     }
 
     private Item 상품_추가(String title, Member member) {

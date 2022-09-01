@@ -1,8 +1,7 @@
-package com.carret.market.api.geolocation.dto;
+package com.carret.market.application.api.geolocation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor

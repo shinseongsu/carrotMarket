@@ -7,12 +7,15 @@ import com.carret.market.domain.member.Member;
 import com.carret.market.service.item.ItemService;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.web.item.dto.SubscriptRequestDto;
+import com.carret.market.web.item.dto.SubscriptResultDto;
 import com.carret.market.web.item.validate.ItemValidate;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -67,6 +71,14 @@ public class ItemController {
         model.addAttribute("itemInfoDto", itemInfoDto);
         
         return "/item/itemInfo";
+    }
+
+    @PostMapping("/subscript")
+    public ResponseEntity<SubscriptResultDto> subscript(@RequestBody SubscriptRequestDto subscriptRequestDto,
+        @AuthenticationPrincipal UserDetail userDetail) {
+
+        Member member = (Member) userDetail.getMemberDetail();
+        return ResponseEntity.ok(itemService.subscript(subscriptRequestDto.getItemId(), member));
     }
 
 }

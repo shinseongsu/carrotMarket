@@ -1,6 +1,6 @@
-package com.carret.market.api.geolocation.naver;
+package com.carret.market.application.api.geolocation.naver;
 
-import com.carret.market.api.geolocation.naver.dto.NaverGeoLocationResponse;
+import com.carret.market.application.api.geolocation.naver.dto.NaverGeoLocationResponse;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

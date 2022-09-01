@@ -5,6 +5,8 @@ import com.carret.market.domain.item.ItemImage;
 import com.carret.market.domain.item.ItemImageRepository;
 import com.carret.market.domain.item.ItemRepository;
 import com.carret.market.domain.item.ItemStatus;
+import com.carret.market.domain.like.Likes;
+import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.file.FileService;
 import com.carret.market.file.UploadFile;
@@ -12,6 +14,8 @@ import com.carret.market.global.exception.ItemNotFoundException;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.web.item.dto.SubscriptRequestDto;
+import com.carret.market.web.item.dto.SubscriptResultDto;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +33,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final ItemImageRepository itemImageRepository;
+    private final LikesRepository likesRepository;
     private final FileService fileService;
 
     private static final String EMPTY_ITEM = "상품이 존재 하지 않습니다.";
@@ -88,6 +93,27 @@ public class ItemService {
             .orElseThrow(() -> new ItemNotFoundException(EMPTY_ITEM));
 
         item.viewCountIncrease();
+    }
+
+    @Transactional
+    public SubscriptResultDto subscript(Long itemId, Member member) {
+        Optional<Likes> likesOptional = itemRepository.findLikesByItemIdAndMemberId(member.getId(), itemId);
+
+        if(!likesOptional.isPresent()) {
+            Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new ItemNotFoundException("아이템을 찾을 수 없습니다."));
+
+            Likes likes = Likes.builder()
+                .member(member)
+                .item(item)
+                .build();
+            likesRepository.save(likes);
+
+            return SubscriptResultDto.subscript();
+        }
+
+        likesRepository.deleteById(likesOptional.get().getId());
+        return SubscriptResultDto.cancel();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.carret.market.api.geolocation.naver.dto;
+package com.carret.market.application.api.geolocation.naver.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

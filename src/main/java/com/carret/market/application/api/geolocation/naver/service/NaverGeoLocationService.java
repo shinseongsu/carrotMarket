@@ -1,9 +1,9 @@
-package com.carret.market.api.geolocation.naver.service;
+package com.carret.market.application.api.geolocation.naver.service;
 
-import com.carret.market.api.geolocation.GeoLocationApi;
-import com.carret.market.api.geolocation.dto.GeoLocationResponse;
-import com.carret.market.api.geolocation.naver.NaverGeoLocationFeignClient;
-import com.carret.market.api.geolocation.naver.dto.NaverGeoLocationResponse;
+import com.carret.market.application.api.geolocation.GeoLocationApi;
+import com.carret.market.application.api.geolocation.dto.GeoLocationResponse;
+import com.carret.market.application.api.geolocation.naver.NaverGeoLocationFeignClient;
+import com.carret.market.application.api.geolocation.naver.dto.NaverGeoLocationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

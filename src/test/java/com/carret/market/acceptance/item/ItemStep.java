@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 
 public class ItemStep {
+
+    private static final String multipartUrl = "/images/profile.png";
 
     public static ExtractableResponse<Response> 로그인_후_상품등록(String email, String title) throws IOException {
         Map<String, Object> params = new HashMap<>();
@@ -23,9 +26,23 @@ public class ItemStep {
             .given().log().all()
             .auth().form(email, "password", new FormAuthConfig("/login", "email", "password"))
             .when()
-            .multiPart("imageUrl", new ClassPathResource("static/images/common/arrow.png").getFile(), "multipart/form-data")
+            .multiPart("imageUrl", new ClassPathResource(multipartUrl).getFile(), "multipart/form-data")
             .queryParams(params)
             .post("/item")
+            .then().log().all()
+            .extract();
+    }
+
+    public static ExtractableResponse<Response> 로그인_후_상품_관심_주기(String email, Long itemId) {
+        Map<String, Long> params = Map.of("itemId", itemId);
+
+        return RestAssured
+            .given().log().all()
+            .auth().form(email, "password",  new FormAuthConfig("/login", "email", "password"))
+            .when()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(params)
+            .when().post("/item/subscript")
             .then().log().all()
             .extract();
     }

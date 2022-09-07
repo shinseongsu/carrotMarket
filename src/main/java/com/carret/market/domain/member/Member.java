@@ -68,6 +68,10 @@ public class Member extends BaseEntity implements MemberDetail {
         }
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String getEmail() {
         return email;

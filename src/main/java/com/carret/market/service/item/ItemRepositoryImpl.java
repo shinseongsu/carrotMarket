@@ -5,6 +5,8 @@ import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.like.QLikes.likes;
 import static com.carret.market.domain.member.QMember.member;
 
+import com.carret.market.domain.item.Item;
+import com.carret.market.domain.like.Likes;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.querydsl.core.types.ExpressionUtils;
@@ -55,12 +57,6 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
                     item.detail,
                     item.price,
                     item.location,
-                    ExpressionUtils.as(
-                        jpaQueryFactory.select(likes.id.count())
-                            .from(likes)
-                            .where(likes.item.eq(item))
-                        ,"likesCount"
-                    ),
                     item.viewCount,
                     member.previewUrl,
                     member.nickname,
@@ -77,9 +73,30 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom {
                 .from(itemImage)
                 .where(itemImage.item.id.eq(itemId))
                 .fetch());
+
+            List<Likes> likesList = jpaQueryFactory.selectFrom(likes)
+                .where(likes.item.id.eq(itemId))
+                .fetch();
+
+            itemInfoDto.addLikeInfo( likesList.size(),
+                likesList.stream()
+                    .filter(like -> like.getMember()
+                        .getNickname()
+                        .equals(itemInfoDto.getNickname()))
+                    .findFirst()
+                    .orElse(null) != null
+            );
         }
 
         return Optional.ofNullable(itemInfoDto);
     }
 
+    @Override
+    public Optional<Likes> findLikesByItemIdAndMemberId(Long memberId, Long itemId) {
+        return Optional.ofNullable(jpaQueryFactory
+            .selectFrom(likes)
+            .where(likes.item.id.eq(itemId)
+                .and(likes.member.id.eq(memberId)))
+            .fetchOne());
+    }
 }

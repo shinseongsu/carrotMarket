@@ -1,4 +1,4 @@
-name: 제로기프트 테스트 자동화
+name: 당근마켓 테스트 자동화
 
 on:
   pull_request:

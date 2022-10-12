@@ -21,5 +21,4 @@ public abstract class BaseEntity extends BaseTimeEntity {
     @Column(nullable = false)
     private String modifiedBy;
 
-
 }

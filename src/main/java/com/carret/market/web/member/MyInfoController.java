@@ -1,17 +1,13 @@
 package com.carret.market.web.member;
 
-import com.carret.market.config.security.authorization.AuthenticationPrincipal;
-import com.carret.market.config.security.user.MemberDetail;
-import com.carret.market.config.security.user.UserDetail;
+import com.carret.market.support.authorization.AuthenticationPrincipal;
+import com.carret.market.support.user.UserDetail;
 import com.carret.market.domain.member.Member;
 import com.carret.market.global.exception.MemberNotFoundException;
-import com.carret.market.service.member.MemberService;
+import com.carret.market.application.member.MemberService;
 import com.carret.market.web.member.dto.ChangeStatusDto;
-import com.carret.market.web.member.dto.GeoLocationRequestDto;
-import com.carret.market.web.member.dto.GeoLocationResponseDto;
 import com.carret.market.web.member.dto.MemberChangeDto;
 import com.carret.market.web.member.dto.MemberInfoDto;
-import com.carret.market.web.member.dto.MemberRegisterDto;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.carret.market.web.main;
 
-import com.carret.market.service.item.ItemService;
+import com.carret.market.application.item.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

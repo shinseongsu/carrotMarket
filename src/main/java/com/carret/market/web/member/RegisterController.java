@@ -1,6 +1,6 @@
 package com.carret.market.web.member;
 
-import com.carret.market.service.member.MemberService;
+import com.carret.market.application.member.MemberService;
 import com.carret.market.web.member.dto.MemberRegisterDto;
 import com.carret.market.web.member.validate.RegisterValidate;
 import java.io.IOException;

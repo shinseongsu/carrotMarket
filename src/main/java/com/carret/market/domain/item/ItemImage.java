@@ -1,6 +1,8 @@
 package com.carret.market.domain.item;
 
 import com.carret.market.domain.base.BaseEntity;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,9 +24,16 @@ public class ItemImage extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String url;
+
+    @Column(nullable = false)
     private boolean thumbnail;
+
+    @Column(nullable = false)
     private String originalName;
 
     @ManyToOne(fetch = FetchType.LAZY)

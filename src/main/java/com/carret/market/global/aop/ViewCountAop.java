@@ -1,6 +1,6 @@
 package com.carret.market.global.aop;
 
-import com.carret.market.service.item.ItemService;
+import com.carret.market.application.item.ItemService;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;

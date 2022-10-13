@@ -1,6 +1,6 @@
 package com.carret.market.domain.member;
 
-import com.carret.market.config.security.user.MemberDetail;
+import com.carret.market.support.user.MemberDetail;
 import com.carret.market.domain.base.BaseEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -56,16 +56,17 @@ public class Member extends BaseEntity implements MemberDetail {
         this.geolocation = geolocation;
     }
 
-    public void changeInfo(String nickname, String previewUrl, String geolocation) {
+    public void changeInfo(String nickname, String geolocation) {
         if(!ObjectUtils.isEmpty(nickname)) {
             this.nickname = nickname;
-        }
-        if(!ObjectUtils.isEmpty(previewUrl)) {
-            this.previewUrl = previewUrl;
         }
         if(!ObjectUtils.isEmpty(geolocation)) {
             this.geolocation = geolocation;
         }
+    }
+
+    public void changeProfile(String previewUrl) {
+        this.previewUrl = previewUrl;
     }
 
     public Long getId() {

@@ -1,7 +1,7 @@
 package com.carret.market.web.member.validate;
 
 import com.carret.market.domain.member.Member;
-import com.carret.market.service.member.MemberService;
+import com.carret.market.application.member.MemberService;
 import com.carret.market.web.member.dto.MemberRegisterDto;
 import java.util.Objects;
 import java.util.Optional;

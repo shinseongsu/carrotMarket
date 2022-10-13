@@ -2,6 +2,7 @@ package com.carret.market.domain.item;
 
 import com.carret.market.domain.base.BaseEntity;
 import com.carret.market.domain.member.Member;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -27,15 +28,21 @@ public class Item extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     @Lob
+    @Column(nullable = false)
     private String detail;
 
+    @Column(nullable = false)
     private Integer price;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column(nullable = false)
     private String location;
 
     @ColumnDefault("0")
@@ -45,7 +52,7 @@ public class Item extends BaseEntity {
     private ItemStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="member_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder

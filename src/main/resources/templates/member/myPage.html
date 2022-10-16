@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="font-bold text-orange-500 text-2xl">나의 당근</h1>
+
+        <div class="w-3/5 pb-40 mx-auto mt-16">
+          <div class="profile flex">
+            <img class="w-24" th:src="${memberInfoDto.previewUrl}" />
+            <div class="ml-10 text-2xl">
+              <p class="mb-5 font-bold" th:text="${memberInfoDto.nickname}">닉네임</p>
+              <p th:text="${memberInfoDto.location}">정자동</p>
+            </div>
+            <div class="flex flex-row-reverse w-1/5 mt-4 text-2xl font-bold">
+              <a href="/myInfo"> > </a>
+            </div>
+          </div>
+
+          <div
+              class="h-12 w-4/5 mx-auo border-solid border-2 border-orange-500 mt-20 rounded-xl"
+          >
+            <div class="flex mt-2">
+              <p class="font-bold text-orange-500 text-xl mx-5">pay</p>
+              <p class="mt-1 font-bold">0원</p>
+
+              <div class="flex flex-row-reverse w-2/4">
+                <a href="/pay"> 충전하기 </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="menu w-4/5 mt-20">
+            <div class="w-4/5 justify-between flex mx-auto">
+              <div>
+                <div class="w-30 rounded-full bg-orange-300 p-5">
+                  <a href="/subscript">
+                    <img class="w-10 mx-auto" th:src="@{/images/common/love.png}" />
+                  </a>
+                </div>
+                <p class="mt-2 text-center">관심목록</p>
+              </div>
+
+              <div>
+                <div class="w-30 rounded-full bg-orange-300 p-5">
+                  <a href="/chatmenu">
+                    <img class="w-10 mx-auto" th:src="@{/images/common/chatting.png}" />
+                  </a>
+                </div>
+                <p class="mt-2 text-center">채팅목록</p>
+              </div>
+
+              <div>
+                <div class="w-30 rounded-full bg-orange-300 p-5">
+                  <a href="/itemMenu">
+                    <img class="w-10 mx-auto" th:src="@{/images/common/billing.png}" />
+                  </a>
+                </div>
+                <p class="mt-2 text-center">판매내역</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<th:block layout:fragment="script">
+  <script type="text/javascript">
+
+  </script>
+</th:block>

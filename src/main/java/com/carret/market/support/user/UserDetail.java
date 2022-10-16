@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Getter
 public class UserDetail implements UserDetails {
     private static final String BASIC_IMAGE = "/images/common/profile.png";
-    private static final String BASIC_IMAGE_PATH = "/images/";
 
     private final MemberDetail memberDetail;
 
@@ -21,7 +20,11 @@ public class UserDetail implements UserDetails {
 
     public String getPreviewUrl() {
         String previewUl = memberDetail.getPreviewUrl();
-        return Objects.isNull(previewUl) ? BASIC_IMAGE : BASIC_IMAGE_PATH + previewUl;
+        return Objects.isNull(previewUl) ? BASIC_IMAGE : previewUl;
+    }
+
+    public MemberDetail getMemberDetail() {
+        return memberDetail;
     }
 
     @Override

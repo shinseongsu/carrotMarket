@@ -26,7 +26,7 @@
           <th:block th:each="item : ${itemList}">
             <article class="product relative">
               <a th:href="@{/item/info?itemId={itemId}(itemId=${item.itemId})}" class="cursor-pointer">
-                <img class="w-50 h-60" th:src="@{/images/{thumbnail}(thumbnail=${item.thumbnail})}">
+                <img class="w-50 h-60" th:src="${item.thumbnail}">
                 <div class="absolute w-full">
                   <p th:text="${item.title}">타이틀 화면</p>
                   <p th:text="${item.location}">지역</p>

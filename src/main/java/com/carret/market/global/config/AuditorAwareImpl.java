@@ -19,9 +19,14 @@ public class AuditorAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String modifiedBy =
-            isConvretAuthentication(authentication) ? httpServletRequest.getRequestURI() :
+        String modifiedBy = EMPTY;
+        try {
+            modifiedBy = isConvretAuthentication(authentication) ?
+                httpServletRequest.getRequestURI() :
                 authentication.getName();
+        } catch (Exception e) {
+            modifiedBy = EMPTY;
+        }
 
         return Optional.of(modifiedBy);
     }

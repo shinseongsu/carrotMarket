@@ -22,6 +22,14 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: 레빗MQ를 설치합니다.
+        uses: getong/rabbitmq-action@v1.2
+        with:
+          rabbitmq version: '3.8.2-management-alpine'
+          host port: 5672
+          rabbitmq user: 'admin'
+          rabbitmq password: 'admin'
+
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
 

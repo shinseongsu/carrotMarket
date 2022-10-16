@@ -30,7 +30,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     item.title.as("title"),
                     item.location.as("location"),
                     item.price.as("price"),
-                    itemImage.name.as("thumbnail"),
+                    itemImage.url.as("thumbnail"),
                     likes.count().intValue().as("likeCount")
                 ))
             .from(itemImage)
@@ -38,7 +38,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .leftJoin(likes).on(likes.item.eq(item))
             .fetchJoin()
             .where(itemImage.thumbnail.isTrue())
-            .groupBy(item.id, itemImage.name)
+            .groupBy(item.id, itemImage.url)
             .fetch();
     }
 

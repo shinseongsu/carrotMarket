@@ -14,7 +14,7 @@
         <a href="/login" class="border-2 border-orange-400 p-2 ml-3 bg-orange-400 text-white rounded-sm" sec:authorize="isAnonymous()">로그인</a>
         <div class="flex ml-3" sec:authorize="isAuthenticated()">
           <a href="/item" class="border-2 border-orange-400 p-2 mr-3 bg-orange-400 text-white">상품 등록</a>
-          <a href="/myInfo" class="h-10 w-10 rounded-full">
+          <a href="/myPage" class="h-10 w-10 rounded-full">
             <img class="w-full h-full rounded-full" th:src="${#authentication.getPrincipal().getPreviewUrl()}" th:onerror="@{/images/common/profile.png}" >
           </a>
         </div>

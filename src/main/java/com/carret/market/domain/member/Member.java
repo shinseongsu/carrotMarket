@@ -3,6 +3,7 @@ package com.carret.market.domain.member;
 import com.carret.market.support.user.MemberDetail;
 import com.carret.market.domain.base.BaseEntity;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,9 +11,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.util.ObjectUtils;
 
 @Entity
@@ -37,10 +40,12 @@ public class Member extends BaseEntity implements MemberDetail {
     @Enumerated(EnumType.STRING)
     private Roletype role;
 
+    @Lob
     private String previewUrl;
 
     private String geolocation;
 
+    @CreatedDate
     private LocalDateTime joinedAt;
 
     @Builder
@@ -69,6 +74,7 @@ public class Member extends BaseEntity implements MemberDetail {
         this.previewUrl = previewUrl;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -100,7 +106,7 @@ public class Member extends BaseEntity implements MemberDetail {
 
     @Override
     public String getPreviewUrl() {
-        return previewUrl;
+        return Objects.isNull(previewUrl) ? "/images/common/profile.png" : previewUrl;
     }
 
     @Override

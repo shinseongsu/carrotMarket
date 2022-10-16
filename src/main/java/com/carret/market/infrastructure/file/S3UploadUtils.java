@@ -3,7 +3,7 @@ package com.carret.market.infrastructure.file;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.carret.market.global.exception.FileUploadException;
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 @RequiredArgsConstructor
 public class S3UploadUtils {
+    private static final String EXT = ".png";
 
     private final AmazonS3Client amazonS3Client;
 
@@ -23,12 +24,12 @@ public class S3UploadUtils {
     private String bucket;
 
     public UploadFile uploadFile(MultipartFile multipartFile) {
-        if(Objects.isNull(multipartFile)) {
+        if (Objects.isNull(multipartFile) || multipartFile.getSize() == 0) {
             return null;
         }
 
         try {
-            String s3FileName = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
+            String s3FileName = UUID.randomUUID() + "-" + LocalDateTime.now().toString() + EXT;
 
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(multipartFile.getInputStream().available());
@@ -44,7 +45,7 @@ public class S3UploadUtils {
 
     public List<UploadFile> uploadFiles(List<MultipartFile> multipartFiles) {
         return multipartFiles.stream()
-            .map(multipartFile ->  this.uploadFile(multipartFile))
+            .map(multipartFile -> this.uploadFile(multipartFile))
             .collect(Collectors.toList());
     }
 

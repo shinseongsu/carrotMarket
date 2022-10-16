@@ -32,7 +32,7 @@ public class MemberInfoDto {
             .email(member.getEmail())
             .name(member.getName())
             .nickname(member.getNickname())
-            .previewUrl(Objects.isNull(member.getPreviewUrl()) ? "/images/common/profile.png" : "/images/" + member.getPreviewUrl())
+            .previewUrl(Objects.isNull(member.getPreviewUrl()) ? "/images/common/profile.png" :  member.getPreviewUrl())
             .location(member.getGeolocation())
             .build();
     }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="text-center font-bold text-orange-500 text-2xl">채팅방</h1>
+        <div th:data-roomid="${chatResponse.roomId}"
+            class="chatting h-96 flex-col-reverse flex overflow-hidden overflow-y-scroll"
+        >
+          <div th:each="chatInfo : ${chatResponse.chatInfos}">
+
+            <div th:if="${#strings.toString(chatInfo.status)} == 'NOTICE'">
+              <div class="w-3/5 h-8 pt-1 text-center rounded-full bg-slate-200 flex-col mx-auto my-6">
+                <p th:text="${chatInfo.message}"></p>
+              </div>
+            </div>
+
+            <div th:if="${#strings.toString(chatInfo.status)} != 'NOTICE'">
+              <div th:if="${chatInfo.own}">
+                <div class="flex flex-row-reverse space-x-4 space-x-reverse my-4">
+                  <img th:src="${chatInfo.profile}" class="w-10 rounded-full" />
+                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2" th:text="${chatInfo.message}">
+                  </p>
+                </div>
+              </div>
+
+              <div th:unless="${chatInfo.own}">
+                <div class="text-left flex space-x-4 my-4">
+                  <img th:src="${chatInfo.profile}" class="w-10 rounded-full" />
+                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2" th:text="${chatInfo.message}">
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="h-10 mt-10">
+          <input
+              class="sendMessage border-orange-500 border w-4/5 h-10 rounded"
+              type="text"
+          />
+          <button id="send" class="bg-orange-500 w-1/6 h-10 rounded-lg ml-2">
+            전송
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+</div>
+
+<!-- 사용자 스크립트 추가 -->
+<th:block layout:fragment="script">
+  <script type="text/javascript">
+    const $chatting = document.querySelector(".chatting");
+    const $send = document.getElementById("send");
+    const sockJS = new SockJS("/stomp/chat");
+    const stomp = Stomp.over(sockJS);
+    const roomId = document.querySelector('.chatting').dataset.roomid;
+    const memberId = [[ ${#authentication.getPrincipal().getMemberDetail().getId() } ]];
+    const profile = '[[ ${#authentication.getPrincipal().getMemberDetail().getPreviewUrl()} ]]';
+
+    stomp.heartbeat.outgoing = 0;
+    stomp.heartbeat.incoming = 0;
+
+    stomp.connect('admin', 'admin', (frame) => {
+      console.log('STOMP connected' + frame);
+
+      stomp.subscribe('/topic/room.' + roomId, (content) => {
+        const response = JSON.parse(content.body);
+
+        if(response.memberId == memberId) {
+          return;
+        }
+
+        const $div = document.createElement('div');
+        const $img = document.createElement('img');
+        const $p = document.createElement('p');
+        $div.classList = 'text-left flex space-x-4 my-4';
+        $img.src = response.profile;
+        $img.classList = 'w-10 rounded-full';
+        $p.classList = 'bg-orange-500 text-white rounded-lg px-10 pt-2';
+        $p.textContent = response.message;
+        $div.append($img);
+        $div.append($p);
+
+        $chatting.prepend($div);
+
+      }, {'auto-delete':true, 'durable':false, 'exclusive':false});
+
+    });
+
+    // 메시지 전송
+    $send.addEventListener("click", () => {
+      const $div = document.createElement("div");
+      const $img = document.createElement("img");
+      const $p = document.createElement("p");
+      const message = document.querySelector('.sendMessage').value;
+      document.querySelector('.sendMessage').value = '';
+      $img.src = profile;
+      $div.classList = "flex flex-row-reverse space-x-4 space-x-reverse my-4";
+      $img.classList = "w-10 rounded-full";
+      $p.classList = "bg-orange-500 text-white rounded-lg px-10 pt-2";
+      $p.textContent = message;
+      $div.append($img);
+      $div.append($p);
+
+      $chatting.prepend($div);
+
+      stomp.send('/pub/chat.message.' + roomId , {}, JSON.stringify({
+        message: message,
+        memberId: memberId,
+        roomId: roomId,
+      }));
+    });
+  </script>
+</th:block>
+
+</html>

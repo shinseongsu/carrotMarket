@@ -4,6 +4,8 @@ import com.carret.market.domain.member.Roletype;
 
 public interface MemberDetail {
 
+    Long getId();
+
     String getEmail();
 
     String getPassword();

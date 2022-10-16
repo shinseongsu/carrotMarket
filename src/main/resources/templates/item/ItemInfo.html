@@ -97,7 +97,7 @@
         <div class="slide w-3/5 h-3/5">
           <ul class="slide__list">
             <li class="slide__item" th:each="image : ${itemInfoDto.imageUrlList}">
-              <img class="slide__image" th:src="@{/images/{imageUrl}(imageUrl=${image})}" alt="상품 이미지" />
+              <img class="slide__image" th:src="${image}" alt="상품 이미지" />
             </li>
           </ul>
           <div class="buttons"></div>
@@ -146,7 +146,7 @@
               </div>
             </div>
             <div>
-              <button class="bg-orange-500 text-white px-10 py-2 rounded-lg">채팅하기</button>
+              <button class="chat_btn bg-orange-500 text-white px-10 py-2 rounded-lg" th:onclick="@{location.href='/chat/{itemId}'(itemId=${itemInfoDto.itemId})}">채팅하기</button>
             </div>
           </div>
         </div>
@@ -167,6 +167,7 @@
     const buttons = document.querySelector('.buttons');
     const paginations = document.querySelector('.paginations');
     const $likes = document.querySelector('.likes');
+    const $chatBtn = document.querySelector('.chat_btn');
     const itemId = document.querySelector('.itemId').value;
     const lastIndex = items.length - 1;
     let selected = 0;

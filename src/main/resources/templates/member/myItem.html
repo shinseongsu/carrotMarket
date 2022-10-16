@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+
+<!-- 사용자 CSS 추가 -->
+<th:block layout:fragment="css">
+  <style>
+
+  </style>
+</th:block>
+
+<div layout:fragment="content">
+  <main class="min-h-screen bg-gray-100 pt-20">
+    <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
+      <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
+        <h1 class="font-bold text-orange-500 text-2xl">나의 판매목록</h1>
+
+        <div class="w-3/5 pb-40 mx-auto mt-16">
+          <div th:each="itemInfo : ${myitemList}">
+            <a th:href="@{/item/info?itemId={itemId}(itemId=${itemInfo.itemId})}">
+              <div class="h-40 w-full flex border-y-2 border-solid border-slate-300">
+                <img
+                    th:src="${itemInfo.imageUrl}"
+                    class="rounded-xl w-30 h-30"
+                  />
+                <div class="w-full ml-5 mt-2 text-ellipsis overflow-hidden">
+                  <p class="text-1xl font-bold truncate" th:text="${itemInfo.title}">
+                    상풍 제목
+                  </p>
+                  <p class="mt-2 truncate text-slate-400" th:text="${itemInfo.location}">위치</p>
+                  <p class="my-3">
+                  <span th:if="${#strings.toString(itemInfo.status)} == 'SELL'"
+                    class="bg-gray-400 text text-white text-xs p-1 rounded-lg mr-3"
+                  >판매중
+                  </span>
+                  <span th:unless="${#strings.toString(itemInfo.status)} == 'SELL'"
+                        class="bg-gray-400 text text-white text-xs p-1 rounded-lg mr-3"
+                  >판매완료
+                  </span>
+                  <span class="font-bold" th:text="${itemInfo.price}">2,000원</span>
+                  </p>
+                  <div class="flex space-x-2 justify-end mr-5">
+                    <img class="w-6" th:src="@{/images/common/chatting.png}" />
+                    <p th:text="${itemInfo.count}">3</p>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</div>
+
+<th:block layout:fragment="script">
+  <script type="text/javascript">
+
+  </script>
+</th:block>

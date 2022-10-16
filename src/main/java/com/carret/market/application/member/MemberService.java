@@ -1,5 +1,6 @@
 package com.carret.market.application.member;
 
+import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.domain.member.Roletype;
@@ -8,8 +9,11 @@ import com.carret.market.infrastructure.file.UploadFile;
 import com.carret.market.global.exception.MemberNotFoundException;
 import com.carret.market.web.member.dto.MemberChangeDto;
 import com.carret.market.web.member.dto.MemberRegisterDto;
+import com.carret.market.web.member.dto.MyItemInfo;
+import com.carret.market.web.member.dto.SubscriptResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +31,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final S3UploadUtils fileService;
     private final PasswordEncoder passwordEncoder;
+    private final LikesRepository likesRepository;
 
     private static final String EMPTY_MEMBER = "회웜이 존재하지 않습니다.";
 
@@ -40,7 +45,7 @@ public class MemberService {
                 .name(memberRegisterDto.getName())
                 .nickname(memberRegisterDto.getNickname())
                 .role(Roletype.ROLE_MEMBER)
-                .previewUrl(Objects.isNull(uploadFile) ? null : uploadFile.getStoreFileName())
+                .previewUrl(Objects.isNull(uploadFile) ? null : uploadFile.getFileUploadUrl())
                 .joinedAt(LocalDateTime.now())
                 .geolocation(memberRegisterDto.getLocation())
                 .build());
@@ -50,7 +55,6 @@ public class MemberService {
         return memberRepository.findByEmail(email);
     }
 
-    @Transactional
     public void changeMemberInfo(String email, MemberChangeDto memberChangeDto) throws IOException {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException(EMPTY_MEMBER));
@@ -67,5 +71,13 @@ public class MemberService {
         return ObjectUtils.isEmpty(multipartFile) || multipartFile.isEmpty() ? false : true;
     }
 
+    @Transactional(readOnly = true)
+    public List<SubscriptResponse> findBySubscripts(Long memberId) {
+        return likesRepository.findBySubscripts(memberId);
+    }
+
+    public List<MyItemInfo> selectMyItemList(Long memberId) {
+        return memberRepository.findMyItemInfoByMemberId(memberId);
+    }
 
 }

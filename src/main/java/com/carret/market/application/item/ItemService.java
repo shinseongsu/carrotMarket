@@ -75,7 +75,7 @@ public class ItemService {
 
                     itemImageList.add(ItemImage.builder()
                         .name(uploadFile.getStoreFileName())
-                        .url(uploadFile.getStoreFileName())
+                        .url(uploadFile.getFileUploadUrl())
                         .thumbnail(index == 0)
                         .originalName(uploadFile.getOriginalFileName())
                         .item(item)
@@ -86,7 +86,6 @@ public class ItemService {
         return itemImageList;
     }
 
-    @Transactional
     public void viewCountIncrease(Long itemId) {
         Item item = itemRepository.findById(itemId)
             .orElseThrow(() -> new ItemNotFoundException(EMPTY_ITEM));
@@ -94,7 +93,6 @@ public class ItemService {
         item.viewCountIncrease();
     }
 
-    @Transactional
     public SubscriptResultDto subscript(Long itemId, Member member) {
         Optional<Likes> likesOptional = itemRepository.findLikesByItemIdAndMemberId(member.getId(), itemId);
 

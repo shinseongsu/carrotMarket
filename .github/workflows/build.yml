@@ -15,7 +15,6 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
           submodules: recursive
-          ref: main
 
       - name: Checkout submodules
         run: git submodule update --init --recursive

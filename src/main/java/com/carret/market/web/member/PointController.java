@@ -22,7 +22,7 @@ public class PointController {
     @GetMapping("/point")
     public String pointForm(@AuthenticationPrincipal UserDetail userDetail, Model model) {
 
-
+        model.addAttribute("memberPointInfo", memberService.selectPoint(userDetail.getMemberDetail().getId()));
 
         return "/member/pointPage";
     }

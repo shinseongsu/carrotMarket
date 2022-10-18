@@ -14,6 +14,8 @@ import com.carret.market.support.user.MemberDetail;
 import com.carret.market.support.user.UserDetail;
 import com.carret.market.support.user.UserDetailService;
 import com.carret.market.web.member.dto.MemberChangeDto;
+import com.carret.market.web.member.dto.MemberInfoDto;
+import com.carret.market.web.member.dto.MemberPointResponse;
 import com.carret.market.web.member.dto.MemberRegisterDto;
 import com.carret.market.web.member.dto.MyItemInfo;
 import com.carret.market.web.member.dto.PointRequest;
@@ -103,6 +105,20 @@ public class MemberService {
         return memberRepository.findMyItemInfoByMemberId(memberId);
     }
 
+
+    @Transactional(readOnly = true)
+    public MemberInfoDto selectMyPage(String email) {
+        Member member = memberRepository.findByEmail(email)
+            .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+
+        return MemberInfoDto.of(member);
+    }
+
+    @Transactional(readOnly = true)
+    public MemberPointResponse selectPoint(Long memberId) {
+        return memberRepository.findPointByMemberId(memberId);
+    }
+
     public void pointCharge(PointRequest pointRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
@@ -118,7 +134,6 @@ public class MemberService {
             .build());
 
         member.charge(pointRequest.getAmount());
-        userDetailService.memberInfoChange(member);
     }
 
 }

@@ -27,10 +27,9 @@ public class MyInfoController {
     @GetMapping("/myPage")
     public String myPageForm(@AuthenticationPrincipal UserDetail userDetail,
         Model model) {
-        Member member = memberService.findByEmail(userDetail.getMemberDetail().getEmail())
-            .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
-        model.addAttribute("memberInfoDto", MemberInfoDto.of(member));
+        model.addAttribute("memberPointInfo", memberService.selectPoint(userDetail.getMemberDetail().getId()));
+        model.addAttribute("memberInfoDto", memberService.selectMyPage(userDetail.getMemberDetail().getEmail()));
         return "/member/myPage";
     }
 

@@ -20,4 +20,6 @@ public interface MemberDetail {
 
     String getGeolocation();
 
+    int getPoint();
+
 }

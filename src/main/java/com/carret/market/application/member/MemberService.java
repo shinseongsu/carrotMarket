@@ -3,13 +3,18 @@ package com.carret.market.application.member;
 import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
+import com.carret.market.domain.member.Point;
+import com.carret.market.domain.member.PointRepository;
 import com.carret.market.domain.member.Roletype;
+import com.carret.market.global.exception.MemberNotFoundException;
 import com.carret.market.infrastructure.file.S3UploadUtils;
 import com.carret.market.infrastructure.file.UploadFile;
-import com.carret.market.global.exception.MemberNotFoundException;
+import com.carret.market.support.user.MemberDetail;
+import com.carret.market.support.user.UserDetail;
 import com.carret.market.web.member.dto.MemberChangeDto;
 import com.carret.market.web.member.dto.MemberRegisterDto;
 import com.carret.market.web.member.dto.MyItemInfo;
+import com.carret.market.web.member.dto.PointRequest;
 import com.carret.market.web.member.dto.SubscriptResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -17,6 +22,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +42,7 @@ public class MemberService {
     private final S3UploadUtils fileService;
     private final PasswordEncoder passwordEncoder;
     private final LikesRepository likesRepository;
+    private final PointRepository pointRepository;
 
     private static final String EMPTY_MEMBER = "회웜이 존재하지 않습니다.";
 
@@ -59,9 +70,9 @@ public class MemberService {
         Member member = memberRepository.findByEmail(email)
             .orElseThrow(() -> new MemberNotFoundException(EMPTY_MEMBER));
 
-        if(isChangePreview(memberChangeDto.getPreviewUrl())) {
+        if (isChangePreview(memberChangeDto.getPreviewUrl())) {
             UploadFile uploadFile = fileService.uploadFile(memberChangeDto.getPreviewUrl());
-            member.changeProfile(uploadFile.getStoreFileName());
+            member.changeProfile(uploadFile.getFileUploadUrl());
         }
 
         member.changeInfo(memberChangeDto.getNickname(), memberChangeDto.getLocation());
@@ -76,8 +87,26 @@ public class MemberService {
         return likesRepository.findBySubscripts(memberId);
     }
 
+    @Transactional(readOnly = true)
     public List<MyItemInfo> selectMyItemList(Long memberId) {
         return memberRepository.findMyItemInfoByMemberId(memberId);
+    }
+
+    public void pointCharge(PointRequest pointRequest, Long memberId) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+
+        pointRepository.save(Point.builder()
+            .description(pointRequest.getDescription())
+            .amount(pointRequest.getAmount())
+            .pgType(pointRequest.getPgType())
+            .currency(pointRequest.getCurrency())
+            .pgTid(pointRequest.getPgTid())
+            .merchantId(pointRequest.getMerchatUid())
+            .member(member)
+            .build());
+
+        member.charge(pointRequest.getAmount());
     }
 
 }

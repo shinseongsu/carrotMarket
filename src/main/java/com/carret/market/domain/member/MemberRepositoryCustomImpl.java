@@ -4,6 +4,7 @@ import static com.carret.market.domain.chat.QRoom.room;
 import static com.carret.market.domain.item.QItem.item;
 import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.member.QMember.member;
+import static com.carret.market.domain.member.QPoint.point;
 
 import com.carret.market.web.member.dto.MyItemInfo;
 import com.querydsl.core.types.ExpressionUtils;

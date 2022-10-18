@@ -37,6 +37,9 @@ public class Member extends BaseEntity implements MemberDetail {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
+    private int point;
+
     @Enumerated(EnumType.STRING)
     private Roletype role;
 
@@ -59,6 +62,7 @@ public class Member extends BaseEntity implements MemberDetail {
         this.previewUrl = previewUrl;
         this.joinedAt = joinedAt;
         this.geolocation = geolocation;
+        this.point = 0;
     }
 
     public void changeInfo(String nickname, String geolocation) {
@@ -72,6 +76,10 @@ public class Member extends BaseEntity implements MemberDetail {
 
     public void changeProfile(String previewUrl) {
         this.previewUrl = previewUrl;
+    }
+
+    public void charge(int point) {
+        this.point += point;
     }
 
     @Override
@@ -112,5 +120,10 @@ public class Member extends BaseEntity implements MemberDetail {
     @Override
     public String getGeolocation() {
         return geolocation;
+    }
+
+    @Override
+    public int getPoint() {
+        return point;
     }
 }

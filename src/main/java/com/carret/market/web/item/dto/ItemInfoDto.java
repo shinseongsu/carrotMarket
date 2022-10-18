@@ -29,7 +29,7 @@ public class ItemInfoDto {
         this.price = price;
         this.location = location;
         this.viewCount = viewCount;
-        this.previewUrl = Objects.isNull(previewUrl) ? "/images/common/profile.png" : "/images/" + previewUrl;
+        this.previewUrl = Objects.isNull(previewUrl) ? "/images/common/profile.png" : previewUrl;
         this.nickname = nickname;
         this.category = category.getValue();
     }

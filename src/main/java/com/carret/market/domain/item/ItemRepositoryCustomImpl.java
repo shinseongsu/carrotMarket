@@ -8,9 +8,12 @@ import static com.carret.market.domain.member.QMember.member;
 import com.carret.market.domain.like.Likes;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
+import com.carret.market.web.item.dto.ItemRequest;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,7 +26,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ItemListDto> findByItemListPaging() {
+    public List<ItemListDto> findByItemListPaging(ItemRequest itemRequest) {
         return jpaQueryFactory.select(
                 Projections.fields(ItemListDto.class,
                     item.id.as("itemId"),
@@ -37,9 +40,24 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .innerJoin(itemImage.item, item)
             .leftJoin(likes).on(likes.item.eq(item))
             .fetchJoin()
-            .where(itemImage.thumbnail.isTrue())
+            .where(
+                itemImage.thumbnail.isTrue(),
+                searchContains(itemRequest.getSearch())
+            )
             .groupBy(item.id, itemImage.url)
+            .offset(itemRequest.getOffset() * itemRequest.getSize())
+            .limit(itemRequest.getSize())
+            .orderBy(item.createdBy.desc())
             .fetch();
+    }
+    
+    private BooleanExpression searchContains(String searchBar) {
+        if(Objects.isNull(searchBar)) {
+            return null;
+        }
+
+        return item.title.contains(searchBar)
+            .or(item.location.contains(searchBar));
     }
 
     @Override

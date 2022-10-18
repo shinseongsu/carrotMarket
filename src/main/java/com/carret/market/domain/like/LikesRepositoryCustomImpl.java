@@ -28,18 +28,17 @@ public class LikesRepositoryCustomImpl implements LikesRepositoryCustom {
                 itemImage.url,
                 item.location,
                 item.price,
-                ExpressionUtils.as(
-                    JPAExpressions
-                        .select(likes.count().intValue())
-                        .from(likes)
-                        .where(likes.item.eq(item)), "ExpressionUtils")
+                likes.count().intValue()
             ))
-            .from(itemImage)
-            .innerJoin(itemImage.item, item)
-            .innerJoin(item.member, member)
+            .from(likes)
+            .innerJoin(likes.item, item)
+            .innerJoin(likes.member, member)
+            .innerJoin(itemImage)
+                .on(itemImage.item.eq(item))
             .where(
                 member.id.eq(memberId),
                 itemImage.thumbnail.isTrue())
+            .groupBy(likes.id, item.id, itemImage.url)
             .fetch();
     }
 }

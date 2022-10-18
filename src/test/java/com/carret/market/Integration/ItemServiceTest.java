@@ -15,6 +15,7 @@ import com.carret.market.domain.member.Roletype;
 import com.carret.market.application.item.ItemService;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
+import com.carret.market.web.item.dto.ItemRequest;
 import com.carret.market.web.item.dto.ItemRequestDto;
 import java.io.IOException;
 import java.util.List;
@@ -59,7 +60,7 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("이미지 전체 리스트 보여주기")
     @Test
     void findByItemList() {
-         List<ItemListDto> itemList = itemService.findByItemList();
+         List<ItemListDto> itemList = itemService.findByItemList(new ItemRequest());
 
          List<String> itemNameList = itemList.stream()
              .map(ItemListDto::getTitle)

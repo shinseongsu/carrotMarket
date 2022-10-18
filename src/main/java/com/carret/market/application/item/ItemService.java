@@ -14,8 +14,8 @@ import com.carret.market.global.exception.ItemNotFoundException;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.web.item.dto.ItemRequest;
 import com.carret.market.web.item.dto.SubscriptResultDto;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +38,8 @@ public class ItemService {
     private static final String EMPTY_ITEM = "상품이 존재 하지 않습니다.";
 
     @Transactional(readOnly = true)
-    public List<ItemListDto> findByItemList() {
-        return itemRepository.findByItemListPaging();
+    public List<ItemListDto> findByItemList(ItemRequest itemRequest) {
+        return itemRepository.findByItemListPaging(itemRequest);
     }
 
     public void save(ItemRequestDto itemRequestDto, Member member) {

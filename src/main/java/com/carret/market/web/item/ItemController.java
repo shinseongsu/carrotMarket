@@ -6,7 +6,9 @@ import com.carret.market.domain.item.Category;
 import com.carret.market.domain.member.Member;
 import com.carret.market.application.item.ItemService;
 import com.carret.market.web.item.dto.ItemInfoDto;
+import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.web.item.dto.ItemRequest;
 import com.carret.market.web.item.dto.SubscriptRequestDto;
 import com.carret.market.web.item.dto.SubscriptResultDto;
 import com.carret.market.web.item.validate.ItemValidate;
@@ -77,6 +79,11 @@ public class ItemController {
 
         Member member = (Member) userDetail.getMemberDetail();
         return ResponseEntity.ok(itemService.subscript(subscriptRequestDto.getItemId(), member));
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<List<ItemListDto>> searchItemList(@RequestBody ItemRequest itemRequest) {
+        return ResponseEntity.ok(itemService.findByItemList(itemRequest));
     }
 
 }

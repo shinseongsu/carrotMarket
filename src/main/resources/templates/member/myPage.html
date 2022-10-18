@@ -33,7 +33,7 @@
           >
             <div class="flex mt-2">
               <p class="font-bold text-orange-500 text-xl mx-5">pay</p>
-              <p class="mt-1 font-bold" th:text="${#authentication.getPrincipal().getMemberDetail().getPoint()}">0원</p>
+              <p class="mt-1 font-bold" th:text="${memberPointInfo.point}">0원</p>
 
               <div class="flex flex-row-reverse w-2/4">
                 <a href="/point"> 충전하기 </a>

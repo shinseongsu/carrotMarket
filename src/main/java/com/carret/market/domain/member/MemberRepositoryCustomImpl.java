@@ -4,8 +4,8 @@ import static com.carret.market.domain.chat.QRoom.room;
 import static com.carret.market.domain.item.QItem.item;
 import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.member.QMember.member;
-import static com.carret.market.domain.member.QPoint.point;
 
+import com.carret.market.web.member.dto.MemberPointResponse;
 import com.carret.market.web.member.dto.MyItemInfo;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -46,5 +46,16 @@ public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
                 member.id.eq(memberId)
             )
             .fetch();
+    }
+
+    @Override
+    public MemberPointResponse findPointByMemberId(Long memberId) {
+        return queryFactory.select(Projections.constructor(
+                MemberPointResponse.class,
+                member.point
+            ))
+            .from(member)
+            .where(member.id.eq(memberId))
+            .fetchOne();
     }
 }

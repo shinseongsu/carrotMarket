@@ -19,7 +19,7 @@ public class MainController {
         @RequestParam(required = false) String search) {
         model.addAttribute("itemList", itemService.findByItemList(new ItemRequest(search)));
 
-        return "/main/main";
+        return "main/main";
     }
 
 }

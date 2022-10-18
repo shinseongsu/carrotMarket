@@ -26,7 +26,7 @@ public class MessageController {
 
     @RabbitListener(queues = CHAT_QUEUE_NAME)
     public void receive(ChatDetail chatDetail) {
-        // 알림 구현 예정
+        // TODO 알림 구현 예정
 
     }
 

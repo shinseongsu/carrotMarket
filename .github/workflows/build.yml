@@ -12,9 +12,12 @@ jobs:
     steps:
       - name: 프로젝트 체크아웃합니다.
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+          submodules: recursive
 
       - name: Checkout submodules
-        uses: textbook/git-checkout-submodule-action@master
+        run: git submodule update --init --force --remote
 
       - name: JDK 11을 설치합니다.
         uses: actions/setup-java@v3

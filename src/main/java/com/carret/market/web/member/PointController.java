@@ -24,7 +24,7 @@ public class PointController {
 
         model.addAttribute("memberPointInfo", memberService.selectPoint(userDetail.getMemberDetail().getId()));
 
-        return "/member/pointPage";
+        return "member/pointPage";
     }
 
     @PostMapping("/point")

@@ -33,7 +33,7 @@ public class RegisterController {
     public String registerView(Model model) {
         model.addAttribute("memberRegisterDto", new MemberRegisterDto());
 
-        return "/member/register";
+        return "member/register";
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class RegisterController {
         BindingResult errors) throws IOException {
 
         if(errors.hasErrors()) {
-            return "/member/register";
+            return "member/register";
         }
 
         memberService.save(memberRegisterDto);

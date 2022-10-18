@@ -23,7 +23,7 @@ public class ChatController {
 
         model.addAttribute("chatResponse", chatService.enterRoom(productId, userDetail.getMemberDetail().getEmail()));
 
-        return "/chat/chat";
+        return "chat/chat";
     }
 
     @GetMapping("/chat/room/{roomId}")
@@ -33,7 +33,7 @@ public class ChatController {
 
         model.addAttribute("chatResponse", chatService.findByChattingList(roomId, userDetail.getMemberDetail().getId()));
 
-        return "/chat/chat";
+        return "chat/chat";
     }
 
 

@@ -46,7 +46,7 @@ public class ItemController {
         model.addAttribute("itemRequestDto", new ItemRequestDto());
         model.addAttribute("categories", Category.getCategories());
 
-        return "/item/item";
+        return "item/item";
     }
 
     @PostMapping
@@ -56,7 +56,7 @@ public class ItemController {
 
         itemValidate.validate(itemRequestDto, errors);
         if (errors.hasErrors()) {
-            return "/item/item";
+            return "item/item";
         }
 
         Member member = (Member) userDetail.getMemberDetail();
@@ -70,7 +70,7 @@ public class ItemController {
         ItemInfoDto itemInfoDto = itemService.findByItemId(itemId);
         model.addAttribute("itemInfoDto", itemInfoDto);
         
-        return "/item/itemInfo";
+        return "item/itemInfo";
     }
 
     @PostMapping("/subscript")

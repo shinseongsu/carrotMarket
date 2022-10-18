@@ -30,7 +30,7 @@ public class MyInfoController {
 
         model.addAttribute("memberPointInfo", memberService.selectPoint(userDetail.getMemberDetail().getId()));
         model.addAttribute("memberInfoDto", memberService.selectMyPage(userDetail.getMemberDetail().getEmail()));
-        return "/member/myPage";
+        return "member/myPage";
     }
 
     @GetMapping("/myInfo")
@@ -40,7 +40,7 @@ public class MyInfoController {
                 .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
 
         model.addAttribute("memberInfoDto", MemberInfoDto.of(member));
-        return "/member/myInfo";
+        return "member/myInfo";
     }
 
     @GetMapping("/subscript")
@@ -49,7 +49,7 @@ public class MyInfoController {
 
         model.addAttribute("subscriptItems", memberService.findBySubscripts(userDetail.getMemberDetail().getId()));
 
-        return "/member/subscript";
+        return "member/subscript";
     }
 
     @GetMapping("/chatmenu")
@@ -57,7 +57,7 @@ public class MyInfoController {
 
         model.addAttribute("roomList", chatService.findByRoomList(userDetail.getMemberDetail().getId())) ;
 
-        return "/member/roomList";
+        return "member/roomList";
     }
 
     @GetMapping("/itemMenu")
@@ -65,7 +65,7 @@ public class MyInfoController {
 
         model.addAttribute("myitemList", memberService.selectMyItemList(userDetail.getMemberDetail().getId()));
 
-        return "/member/myItem";
+        return "member/myItem";
     }
 
     @PostMapping("/myInfo/changeInfo")

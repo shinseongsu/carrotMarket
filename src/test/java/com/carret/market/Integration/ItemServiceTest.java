@@ -2,6 +2,7 @@ package com.carret.market.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.carret.market.application.item.ItemService;
 import com.carret.market.domain.item.Category;
 import com.carret.market.domain.item.Item;
 import com.carret.market.domain.item.ItemImage;
@@ -12,7 +13,6 @@ import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.domain.member.Roletype;
-import com.carret.market.application.item.ItemService;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequest;
@@ -24,8 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 public class ItemServiceTest extends IntegrationTest {
 
@@ -60,19 +58,24 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("이미지 전체 리스트 보여주기")
     @Test
     void findByItemList() {
-         List<ItemListDto> itemList = itemService.findByItemList(new ItemRequest());
+        List<ItemListDto> itemList = itemService.findByItemList(new ItemRequest());
 
-         List<String> itemNameList = itemList.stream()
-             .map(ItemListDto::getTitle)
-             .collect(Collectors.toList());
+        List<String> itemNameList = itemList.stream()
+            .map(ItemListDto::getTitle)
+            .collect(Collectors.toList());
 
-         assertThat(itemNameList).containsExactly("test1", "test2");
+        assertThat(itemNameList).containsExactly("test1", "test2");
     }
 
     @DisplayName("상품을 저장합니다.")
     @Test
     void save() throws IOException {
-        ItemRequestDto itemRequestDto = new ItemRequestDto("테스트 상품", List.of(), Category.BEAUTY, 1000, "네고 안됨 ㄴㄴ");
+        ItemRequestDto itemRequestDto = ItemRequestDto.builder()
+            .title("테스트 상품")
+            .category(Category.BEAUTY)
+            .price(1000)
+            .description("네고 안됨 ㄴㄴ")
+            .build();
 
         itemService.save(itemRequestDto, 회원);
 
@@ -82,9 +85,9 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("상품 상세정보를 조회합니다.")
     @Test
     void findByItemId() {
-         ItemInfoDto itemInfoDto = itemService.findByItemId(상품1.getId());
+        ItemInfoDto itemInfoDto = itemService.findByItemId(상품1.getId(), 회원.getId());
 
-         assertThat(itemInfoDto.getTitle()).isEqualTo(상품1.getTitle());
+        assertThat(itemInfoDto.getTitle()).isEqualTo(상품1.getTitle());
     }
 
     @DisplayName("조회수를 증가합니다.")
@@ -92,7 +95,7 @@ public class ItemServiceTest extends IntegrationTest {
     void viewCountIncrease() {
         itemService.viewCountIncrease(상품1.getId());
 
-        int viewCount = itemService.findByItemId(상품1.getId()).getViewCount();
+        int viewCount = itemService.findByItemId(상품1.getId(), 회원.getId()).getViewCount();
 
         assertThat(viewCount).isEqualTo(1);
     }
@@ -123,12 +126,12 @@ public class ItemServiceTest extends IntegrationTest {
 
     private ItemImage 상품_이미지_추가(String name, Item item) {
         return itemImageRepository.save(ItemImage.builder()
-                .name(name)
-                .url("/test")
-                .thumbnail(true)
-                .originalName("originalName")
-                .item(item)
-                .build());
+            .name(name)
+            .url("/test")
+            .thumbnail(true)
+            .originalName("originalName")
+            .item(item)
+            .build());
     }
 
     private Member 회원_추가(String email) {

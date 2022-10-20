@@ -36,7 +36,7 @@ public class Item extends BaseEntity {
     private String detail;
 
     @Column(nullable = false)
-    private Integer price;
+    private int price;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -67,6 +67,13 @@ public class Item extends BaseEntity {
         this.status = status;
         this.member = member;
         this.viewCount = viewCount;
+    }
+
+    public void updateItem(String title, String detail, int price, Category category) {
+        this.title = title;
+        this.detail = detail;
+        this.price = price;
+        this.category = category;
     }
 
     public void viewCountIncrease() {

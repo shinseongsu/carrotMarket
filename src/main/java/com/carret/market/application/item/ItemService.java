@@ -60,9 +60,50 @@ public class ItemService {
         itemImageRepository.saveAll(itemImageList);
     }
 
-    public ItemInfoDto findByItemId(Long itemId) {
-        return itemRepository.findItemInfoByItemId(itemId)
+    public ItemInfoDto findByItemId(Long itemId, Long memberId) {
+        return itemRepository.findItemInfoByItemId(itemId, memberId)
             .orElseThrow(() -> new ItemNotFoundException(EMPTY_ITEM));
+    }
+
+    @Transactional(readOnly = true)
+    public ItemRequestDto selectEditItem(Long itemId) {
+        return itemRepository.findEditItemByItemId(itemId)
+            .orElseThrow(() -> new ItemNotFoundException("상품이 존재하지 않습니다."));
+    }
+
+    public void updateEditItem(ItemRequestDto itemRequestDto) {
+        Item item = itemRepository.findById(itemRequestDto.getItemId())
+            .orElseThrow(() -> new ItemNotFoundException("상품이 존재하지 않습니다."));
+
+        item.updateItem(itemRequestDto.getTitle(), itemRequestDto.getDescription(), itemRequestDto.getPrice(), itemRequestDto.getCategory());
+        itemImageRepository.deleteItemImageByUrl(itemRequestDto.getDeleteImageIds());
+
+        List<ItemImage> itemImageList = itemImageRepository.findByItem(item);
+
+        if(!itemRequestDto.getImageUrl().get(0).isEmpty()) {
+            itemImageRepository.saveAll(this.editFiles(itemRequestDto.getImageUrl(), item, itemImageList.size()));
+        }
+    }
+
+    private List<ItemImage> editFiles(List<MultipartFile> images, Item item, int itemImageSize) {
+        List<UploadFile> uploadFileList = s3UploadUtils.uploadFiles(images);
+
+        List<ItemImage> itemImageList = new ArrayList<>();
+        IntStream.range(0, uploadFileList.size())
+            .forEach(index -> {
+                    UploadFile uploadFile = uploadFileList.get(index);
+
+                    itemImageList.add(ItemImage.builder()
+                        .name(uploadFile.getStoreFileName())
+                        .url(uploadFile.getFileUploadUrl())
+                        .thumbnail(index == 0 && itemImageSize == 0)
+                        .originalName(uploadFile.getOriginalFileName())
+                        .item(item)
+                        .build());
+                }
+            );
+
+        return itemImageList;
     }
 
     private List<ItemImage> uploadFiles(List<MultipartFile> images, Item item) {

@@ -6,9 +6,11 @@ import static com.carret.market.domain.like.QLikes.likes;
 import static com.carret.market.domain.member.QMember.member;
 
 import com.carret.market.domain.like.Likes;
+import com.carret.market.web.item.dto.ItemImageInfo;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequest;
+import com.carret.market.web.item.dto.ItemRequestDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -50,9 +52,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .orderBy(item.createdBy.desc())
             .fetch();
     }
-    
+
     private BooleanExpression searchContains(String searchBar) {
-        if(Objects.isNull(searchBar)) {
+        if (Objects.isNull(searchBar)) {
             return null;
         }
 
@@ -61,9 +63,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Optional<ItemInfoDto> findItemInfoByItemId(Long itemId) {
+    public Optional<ItemInfoDto> findItemInfoByItemId(Long itemId, Long memberId) {
         ItemInfoDto itemInfoDto = jpaQueryFactory.select(
-            Projections.constructor(ItemInfoDto.class,
+                Projections.constructor(ItemInfoDto.class,
                     item.id,
                     item.title,
                     item.detail,
@@ -72,14 +74,15 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                     item.viewCount,
                     member.previewUrl,
                     member.nickname,
-                    item.category
+                    item.category,
+                    member.id.eq(memberId)
                 ))
             .from(item)
             .innerJoin(item.member, member)
             .where(item.id.eq(itemId))
             .fetchOne();
 
-        if(!ObjectUtils.isEmpty(itemInfoDto)) {
+        if (!ObjectUtils.isEmpty(itemInfoDto)) {
             itemInfoDto.addImage(jpaQueryFactory.select(itemImage.url)
                 .from(itemImage)
                 .where(itemImage.item.id.eq(itemId))
@@ -89,7 +92,7 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
                 .where(likes.item.id.eq(itemId))
                 .fetch();
 
-            itemInfoDto.addLikeInfo( likesList.size(),
+            itemInfoDto.addLikeInfo(likesList.size(),
                 likesList.stream()
                     .filter(like -> like.getMember()
                         .getNickname()
@@ -112,4 +115,32 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .fetchOne());
     }
 
+    @Override
+    public Optional<ItemRequestDto> findEditItemByItemId(Long itemId) {
+        ItemRequestDto itemRequestDto = jpaQueryFactory.select(
+                Projections.constructor(ItemRequestDto.class,
+                    item.title,
+                    item.id,
+                    item.category,
+                    item.price,
+                    item.detail
+                ))
+            .from(item)
+            .where(item.id.eq(itemId))
+            .fetchOne();
+
+        List<ItemImageInfo> originalImageUrl = jpaQueryFactory
+            .select(Projections.constructor(
+                ItemImageInfo.class,
+                itemImage.id,
+                itemImage.url
+            ))
+            .from(itemImage)
+            .innerJoin(itemImage.item, item)
+            .where(item.id.eq(itemId))
+            .fetch();
+
+        itemRequestDto.addOriginalImageUrl(originalImageUrl);
+        return Optional.ofNullable(itemRequestDto);
+    }
 }

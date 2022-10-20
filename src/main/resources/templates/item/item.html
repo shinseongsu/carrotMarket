@@ -14,7 +14,7 @@
       <form method="post" th:action="@{/item}" enctype="multipart/form-data" role="form"
             th:object="${itemRequestDto}">
         <div class="w-4/5 h-4/5 m-auto pt-5 pb-10">
-          <h1 class="mb-10 text-lg font-bold">중고거래 글쓰기</h1>
+          <h1 class="mb-10 text-lg font-bold">중고물품 등록</h1>
 
           <label
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">미리보기</label>
@@ -23,9 +23,16 @@
               <img id="photo" class="w-14 h-full" th:src="@{/images/common/photo.png}">
               <input id="file" name="imageUrl" class="hidden" type="file" multiple
                      th:field="*{imageUrl}">
+              <input id="deleteImageIds" name="deleteImageIds" class="hidden" type="text" th:field="*{deleteImageIds}" />
             </div>
             <div id="file-list"
-                 class="ml-10 min-h-full w-full flex border-solid border-2 border-gray-500 rounded overflow-scroll">
+                 class="ml-10 min-h-full w-full flex border-solid border-2 border-gray-500 rounded overflow-scroll" >
+              <div th:each="itemImage, i : ${itemRequestDto.originalImageUrl}" th:id="'originalFile' + ${i.count}" class="filebox relative ml-3 top-0">
+                <img class="h-15 w-20 relative" th:src="${itemImage.url}">
+                <i class="fa-solid fa-circle-xmark h-6 w-6 absolute top-0 left-16" th:onClick="'originalDeleteFile(' + ${i.count} + ')'" ></i>
+                <input type="text" class="hidden" th:id="'itemImageId' + ${i.count}" th:value="${itemImage.itemImageId}" />
+              </div>
+
             </div>
           </article>
           <p class="field-error" th:if="${#fields.hasErrors('imageUrl')}" th:errors="*{imageUrl}"></p>
@@ -92,10 +99,13 @@
                       class="block p-4 w-full truncate text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-md focus:ring-orange-500 focus:border-orange-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"></textarea>
             <p class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
           </article>
+          <input type="text" class="hidden" id="itemId" name="itemId" th:field="*{itemId}">
 
           <article class="w-full text-center">
-            <input class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
+            <input th:if="${itemRequestDto.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
                    value="글 작성" id="submitButton"/>
+            <input th:unless="${itemRequestDto.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
+                   value="글 수정" id="submitButton"/>
           </article>
         </div>
       </form>
@@ -115,6 +125,13 @@
     const $dropdown = document.getElementById('dropdown');
     const $textarea = document.getElementById('large-input');
     const $submitButton = document.getElementById('submitButton');
+    const category = document.getElementById('category').value;
+    const $deleteImageIds = document.getElementById('deleteImageIds');
+    const removeUrl = [];
+
+    if(category.length != 0) {
+      $dropdownDefault.textContent = '[[ ${itemRequestDto.getCategoryName()} ]]';
+    }
 
     $textarea.addEventListener('keyup', () => {
       $textarea.style.height = '1px'; // 초기화
@@ -143,15 +160,16 @@
           }
         }
 
-        $fileList.innerHTML = "";
         for(let i = 0; i < dataTransfer.items.length ; i++) {
+          deleteFile(i);
+
           const reader = new FileReader();
           reader.onload = function (event) {
             let htmlData = '<div id="file' + i + '" class="filebox relative ml-3 top-0">';
             htmlData += '   <img class="h-15 w-20 relative" src="' + event.target.result + '">';
             htmlData += '   <i class="fa-solid fa-circle-xmark h-6 w-6 absolute top-0 left-16" onClick="deleteFile(' + i + ')"></i>';
 
-            $fileList.innerHTML += htmlData;
+            $fileList.insertAdjacentHTML('beforeend', htmlData) ;
           }
           reader.readAsDataURL(dataTransfer.files[i]);
         }
@@ -178,8 +196,17 @@
     }
 
     function deleteFile(fileNum) {
-      document.querySelector('#file' + fileNum).remove();
-      dataTransfer.items.remove(fileNum);
+      const $file = document.querySelector('#file' + fileNum);
+
+      if($file) {
+        document.querySelector('#file' + fileNum).remove();
+        dataTransfer.items.remove(fileNum);
+      }
+    }
+
+    function originalDeleteFile(index) {
+      removeUrl.push( document.getElementById(`itemImageId${index}`).value);
+      document.querySelector('#originalFile' + index).remove();
     }
 
     const fileClick = () => {
@@ -197,7 +224,13 @@
       e.preventDefault();
 
       $file.files = dataTransfer.files;
-      document.getElementsByTagName('form')[0].submit();
+
+      const form = document.getElementsByTagName('form')[0];
+      if(category.length != 0){
+        form.action = '/item/edit';
+        $deleteImageIds.value = removeUrl.join(',');
+      }
+      form.submit();
     });
 
     $dropdown.addEventListener('click', (e) => {

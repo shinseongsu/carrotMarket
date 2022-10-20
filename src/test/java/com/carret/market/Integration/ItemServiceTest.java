@@ -1,6 +1,9 @@
 package com.carret.market.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static reactor.core.publisher.Mono.when;
 
 import com.carret.market.application.item.ItemService;
 import com.carret.market.domain.item.Category;
@@ -13,6 +16,8 @@ import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.domain.member.Roletype;
+import com.carret.market.infrastructure.file.S3UploadUtils;
+import com.carret.market.infrastructure.file.UploadFile;
 import com.carret.market.web.item.dto.ItemInfoDto;
 import com.carret.market.web.item.dto.ItemListDto;
 import com.carret.market.web.item.dto.ItemRequest;
@@ -23,7 +28,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class ItemServiceTest extends IntegrationTest {
 
@@ -41,6 +48,9 @@ public class ItemServiceTest extends IntegrationTest {
 
     @Autowired
     LikesRepository likesRepository;
+
+    @MockBean
+    private S3UploadUtils s3UploadUtils;
 
     Member 회원;
 
@@ -70,6 +80,8 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("상품을 저장합니다.")
     @Test
     void save() throws IOException {
+        Mockito.when(s3UploadUtils.uploadFile(any())).thenReturn(new UploadFile("원본이름", "변경된 이름", "저장된 URL"));
+
         ItemRequestDto itemRequestDto = ItemRequestDto.builder()
             .title("테스트 상품")
             .category(Category.BEAUTY)

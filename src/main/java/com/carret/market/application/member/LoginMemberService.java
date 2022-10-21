@@ -1,5 +1,8 @@
 package com.carret.market.application.member;
 
+import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_USERNAME;
+
+import com.carret.market.global.exception.ErrorCode;
 import com.carret.market.support.user.MemberDetail;
 import com.carret.market.support.user.UserDetail;
 import com.carret.market.domain.member.Member;
@@ -21,7 +24,7 @@ public class LoginMemberService implements AuthUserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디 입니다."));
+            .orElseThrow(() -> new UsernameNotFoundException(NOT_FOUND_USERNAME.getMessage()));
 
         return new UserDetail((MemberDetail) member );
     }

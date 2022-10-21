@@ -19,10 +19,11 @@ public class ItemInfoDto {
     private String nickname;
     private String category;
     private boolean isOwnerLikes;
+    private boolean isOwnerItem;
 
     public ItemInfoDto(Long itemId, String title, String detail, Integer price,
         String location, Integer viewCount,
-        String previewUrl, String nickname, Category category) {
+        String previewUrl, String nickname, Category category, boolean isOwnerItem) {
         this.itemId = itemId;
         this.title = title;
         this.detail = detail;
@@ -32,6 +33,7 @@ public class ItemInfoDto {
         this.previewUrl = Objects.isNull(previewUrl) ? "/images/common/profile.png" : previewUrl;
         this.nickname = nickname;
         this.category = category.getValue();
+        this.isOwnerItem = isOwnerItem;
     }
 
     public void addImage(List<String> imageUrlList) {

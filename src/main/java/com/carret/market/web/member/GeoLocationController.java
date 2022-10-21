@@ -1,8 +1,8 @@
 package com.carret.market.web.member;
 
 import com.carret.market.application.geolocation.GeolocationService;
-import com.carret.market.web.member.dto.GeoLocationRequestDto;
-import com.carret.market.web.member.dto.GeoLocationResponseDto;
+import com.carret.market.application.member.dto.GeoLocationRequest;
+import com.carret.market.application.member.dto.GeoLocationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +16,10 @@ public class GeoLocationController {
     private final GeolocationService geolocationService;
 
     @PostMapping("/myGeolocation")
-    public ResponseEntity<GeoLocationResponseDto> geolocationApi(@RequestBody GeoLocationRequestDto geoLocationRequestDto) {
+    public ResponseEntity<GeoLocationResponse> geolocationApi(@RequestBody GeoLocationRequest geoLocationRequestDto) {
         String area = geolocationService.searchGeolocation(geoLocationRequestDto);
 
-        return ResponseEntity.ok().body(new GeoLocationResponseDto(area));
+        return ResponseEntity.ok().body(new GeoLocationResponse(area));
     }
 
 }

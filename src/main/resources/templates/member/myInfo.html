@@ -59,7 +59,7 @@
         <h1 class="text-center font-bold text-orange-500 text-2xl">회원가입</h1>
 
         <form name="form" class="login_form mx-auto" th:action="@{/changeInfo}" enctype="multipart/form-data" role="form"
-              th:object="${memberInfoDto}" method="post">
+              th:object="${memberInfo}" method="post">
           <div class="login_input_wrap">
             <label for="email" class="login_label">
               <img th:src="@{/images/common/mail.png}" alt="아이디" class="login_icon"/>

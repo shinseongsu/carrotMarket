@@ -1,7 +1,7 @@
 package com.carret.market.web.chat;
 
-import com.carret.market.web.chat.dto.ChatDetail;
-import com.carret.market.web.chat.dto.ChatDto;
+import com.carret.market.application.chat.dto.ChatDetail;
+import com.carret.market.application.chat.dto.MessageRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,8 +20,8 @@ public class MessageController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @MessageMapping("chat.message.{roomId}")
-    public void send(ChatDto chatDto, @DestinationVariable Long roomId) {
-        applicationEventPublisher.publishEvent(chatDto);
+    public void send(MessageRequest messageRequest, @DestinationVariable Long roomId) {
+        applicationEventPublisher.publishEvent(messageRequest);
     }
 
     @RabbitListener(queues = CHAT_QUEUE_NAME)

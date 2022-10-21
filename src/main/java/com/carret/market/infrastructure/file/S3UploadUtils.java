@@ -1,5 +1,7 @@
 package com.carret.market.infrastructure.file;
 
+import static com.carret.market.global.exception.ErrorCode.EXCEPTION_FILE_UPLOAD;
+
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.carret.market.global.exception.FileUploadException;
@@ -16,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 @RequiredArgsConstructor
 public class S3UploadUtils {
+
     private static final String EXT = ".png";
+    private static final String DELIMITER = "-";
 
     private final AmazonS3Client amazonS3Client;
 
@@ -29,7 +33,7 @@ public class S3UploadUtils {
         }
 
         try {
-            String s3FileName = UUID.randomUUID() + "-" + LocalDateTime.now().toString() + EXT;
+            String s3FileName = UUID.randomUUID() + DELIMITER + LocalDateTime.now().toString() + EXT;
 
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(multipartFile.getInputStream().available());
@@ -39,7 +43,7 @@ public class S3UploadUtils {
             return new UploadFile(multipartFile.getOriginalFilename(), s3FileName,
                 amazonS3Client.getUrl(bucket, s3FileName).toString());
         } catch (Exception e) {
-            throw new FileUploadException("파일 업로드중 에러가 발생하였습니다.");
+            throw new FileUploadException(EXCEPTION_FILE_UPLOAD);
         }
     }
 

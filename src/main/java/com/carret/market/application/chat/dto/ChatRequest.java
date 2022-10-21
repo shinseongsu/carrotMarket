@@ -1,9 +1,10 @@
-package com.carret.market.web.chat.dto;
+package com.carret.market.application.chat.dto;
 
 import lombok.Getter;
 
 @Getter
 public class ChatRequest {
+
     private final String message;
 
     public ChatRequest(String message) {

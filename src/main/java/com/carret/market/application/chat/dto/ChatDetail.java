@@ -1,8 +1,8 @@
-package com.carret.market.web.chat.dto;
+package com.carret.market.application.chat.dto;
 
 import com.carret.market.domain.chat.MessageStatus;
 import com.carret.market.domain.member.Member;
-import java.util.Objects;
+import com.carret.market.infrastructure.file.ImageCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -24,12 +24,12 @@ public class ChatDetail {
         this.status = status;
     }
 
-    public static ChatDetail of(ChatDto chatDto, Member member) {
+    public static ChatDetail of(MessageRequest messageRequest, Member member) {
         return ChatDetail.builder()
             .memberId(member.getId())
-            .message(chatDto.getMessage())
+            .message(messageRequest.getMessage())
             .nickName(member.getNickname())
-            .profile(Objects.isNull(member.getPreviewUrl()) ? "/images/common/profile.png" : member.getPreviewUrl())
+            .profile(ImageCode.from(member.getPreviewUrl()))
             .status(MessageStatus.MESSAGE)
             .build();
     }

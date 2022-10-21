@@ -5,10 +5,8 @@ import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.like.QLikes.likes;
 import static com.carret.market.domain.member.QMember.member;
 
-import com.carret.market.web.member.dto.SubscriptResponse;
-import com.querydsl.core.types.ExpressionUtils;
+import com.carret.market.application.member.dto.SubscriptResponse;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

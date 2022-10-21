@@ -2,7 +2,7 @@ package com.carret.market.web.member.validate;
 
 import com.carret.market.domain.member.Member;
 import com.carret.market.application.member.MemberService;
-import com.carret.market.web.member.dto.MemberRegisterDto;
+import com.carret.market.application.member.dto.MemberRegisterRequest;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,29 +17,29 @@ public class RegisterValidate implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return MemberRegisterDto.class.isAssignableFrom(clazz);
+        return MemberRegisterRequest.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        if(target instanceof MemberRegisterDto && !errors.hasErrors()) {
-            MemberRegisterDto memberRegisterDto = (MemberRegisterDto) target;
+        if(target instanceof MemberRegisterRequest && !errors.hasErrors()) {
+            MemberRegisterRequest memberRegisterRequest = (MemberRegisterRequest) target;
 
-            isNotEqualsPassword(errors, memberRegisterDto);
-            isExisisLocation(errors, memberRegisterDto);
-            isExsitsEmail(errors, memberRegisterDto);
+            isNotEqualsPassword(errors, memberRegisterRequest);
+            isExisisLocation(errors, memberRegisterRequest);
+            isExsitsEmail(errors, memberRegisterRequest);
         }
     }
 
-    private void isNotEqualsPassword(Errors errors, MemberRegisterDto memberRegisterDto) {
-        if(!memberRegisterDto.isEqualsPassword()) {
+    private void isNotEqualsPassword(Errors errors, MemberRegisterRequest memberRegisterRequest) {
+        if(!memberRegisterRequest.isEqualsPassword()) {
             errors.rejectValue("passwordConfirm", "", "비밀번호가 다릅니다.");
             return;
         }
     }
 
-    private void isExsitsEmail(Errors errors, MemberRegisterDto memberRegisterDto) {
-        Optional<Member> optionalMember = memberService.findByEmail(memberRegisterDto.getEmail());
+    private void isExsitsEmail(Errors errors, MemberRegisterRequest memberRegisterRequest) {
+        Optional<Member> optionalMember = memberService.findByEmail(memberRegisterRequest.getEmail());
 
         if(optionalMember.isPresent()) {
             errors.reject("existsEmail", "이미 존재하는 이메일입니다.");
@@ -47,8 +47,8 @@ public class RegisterValidate implements Validator {
         }
     }
 
-    private  void isExisisLocation(Errors errors, MemberRegisterDto memberRegisterDto) {
-        if(Objects.isNull(memberRegisterDto.getLocation())) {
+    private  void isExisisLocation(Errors errors, MemberRegisterRequest memberRegisterRequest) {
+        if(Objects.isNull(memberRegisterRequest.getLocation())) {
             errors.reject("existLocation", "위치 정보가 켜져 있어야 회원 가입 가능합니다.");
             return;
         }

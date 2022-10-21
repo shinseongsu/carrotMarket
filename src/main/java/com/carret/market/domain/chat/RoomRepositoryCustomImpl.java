@@ -6,15 +6,12 @@ import static com.carret.market.domain.item.QItem.item;
 import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.member.QMember.member;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.maxBy;
 
-import com.carret.market.web.member.dto.RoomResponse;
+import com.carret.market.application.member.dto.RoomResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

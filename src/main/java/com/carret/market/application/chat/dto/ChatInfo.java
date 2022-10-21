@@ -1,11 +1,13 @@
-package com.carret.market.web.chat.dto;
+package com.carret.market.application.chat.dto;
 
 import com.carret.market.domain.chat.MessageStatus;
+import com.carret.market.infrastructure.file.ImageCode;
 import java.util.Objects;
 import lombok.Getter;
 
 @Getter
 public class ChatInfo {
+
     private final String message;
     private final String nickName;
     private final String profile;
@@ -16,7 +18,7 @@ public class ChatInfo {
         MessageStatus status) {
         this.message = message;
         this.nickName = nickName;
-        this.profile = Objects.isNull(profile) ? "/images/common/profile.png" : profile;
+        this.profile = ImageCode.from(profile);
         this.own = own;
         this.status = status;
     }

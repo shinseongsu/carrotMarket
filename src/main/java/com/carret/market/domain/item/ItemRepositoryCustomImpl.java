@@ -6,11 +6,11 @@ import static com.carret.market.domain.like.QLikes.likes;
 import static com.carret.market.domain.member.QMember.member;
 
 import com.carret.market.domain.like.Likes;
-import com.carret.market.web.item.dto.ItemImageInfo;
-import com.carret.market.web.item.dto.ItemInfoDto;
-import com.carret.market.web.item.dto.ItemListDto;
-import com.carret.market.web.item.dto.ItemRequest;
-import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.application.item.dto.ItemImageInfo;
+import com.carret.market.application.item.dto.ItemInfo;
+import com.carret.market.application.item.dto.ItemList;
+import com.carret.market.application.item.dto.ItemPagingRequest;
+import com.carret.market.application.item.dto.ItemRequest;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -28,9 +28,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<ItemListDto> findByItemListPaging(ItemRequest itemRequest) {
+    public List<ItemList> findByItemListPaging(ItemPagingRequest itemRequest) {
         return jpaQueryFactory.select(
-                Projections.fields(ItemListDto.class,
+                Projections.fields(ItemList.class,
                     item.id.as("itemId"),
                     item.title.as("title"),
                     item.location.as("location"),
@@ -63,9 +63,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Optional<ItemInfoDto> findItemInfoByItemId(Long itemId, Long memberId) {
-        ItemInfoDto itemInfoDto = jpaQueryFactory.select(
-                Projections.constructor(ItemInfoDto.class,
+    public Optional<ItemInfo> findItemInfoByItemId(Long itemId, Long memberId) {
+        ItemInfo itemInfoDto = jpaQueryFactory.select(
+                Projections.constructor(ItemInfo.class,
                     item.id,
                     item.title,
                     item.detail,
@@ -116,9 +116,9 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Optional<ItemRequestDto> findEditItemByItemId(Long itemId) {
-        ItemRequestDto itemRequestDto = jpaQueryFactory.select(
-                Projections.constructor(ItemRequestDto.class,
+    public Optional<ItemRequest> findEditItemByItemId(Long itemId) {
+        ItemRequest itemRequestDto = jpaQueryFactory.select(
+                Projections.constructor(ItemRequest.class,
                     item.title,
                     item.id,
                     item.category,

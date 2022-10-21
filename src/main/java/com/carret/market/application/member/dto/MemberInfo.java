@@ -1,6 +1,7 @@
-package com.carret.market.web.member.dto;
+package com.carret.market.application.member.dto;
 
 import com.carret.market.domain.member.Member;
+import com.carret.market.infrastructure.file.ImageCode;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberInfoDto {
+public class MemberInfo {
 
     private String email;
     private String name;
@@ -19,7 +20,7 @@ public class MemberInfoDto {
     private String location;
 
     @Builder
-    public MemberInfoDto(String email, String name, String nickname, String previewUrl, String location) {
+    public MemberInfo(String email, String name, String nickname, String previewUrl, String location) {
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -27,12 +28,12 @@ public class MemberInfoDto {
         this.location = location;
     }
 
-    public static MemberInfoDto of(Member member) {
-        return MemberInfoDto.builder()
+    public static MemberInfo of(Member member) {
+        return MemberInfo.builder()
             .email(member.getEmail())
             .name(member.getName())
             .nickname(member.getNickname())
-            .previewUrl(Objects.isNull(member.getPreviewUrl()) ? "/images/common/profile.png" :  member.getPreviewUrl())
+            .previewUrl(ImageCode.from(member.getPreviewUrl()))
             .location(member.getGeolocation())
             .build();
     }

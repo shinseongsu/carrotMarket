@@ -7,6 +7,7 @@ import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.member.QMember.member;
 import static java.util.stream.Collectors.groupingBy;
 
+import com.carret.market.application.chat.dto.PayFormResponse;
 import com.carret.market.application.member.dto.RoomResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -81,7 +82,21 @@ public class RoomRepositoryCustomImpl implements RoomRepositoryCustom {
 
     private BooleanExpression eqMemberIdOrBuyerId(Long memberId) {
         return room.buyer.id.eq(memberId)
-            .or(room.item.id.eq(memberId));
+            .or(room.item.member.id.eq(memberId));
     }
 
+    @Override
+    public PayFormResponse findSellerIdAndAmountByRoomId(Long roomId) {
+        return queryFactory.select(
+            Projections.constructor(
+                PayFormResponse.class,
+                member.id,
+                item.price
+            )
+        ).from(room)
+            .innerJoin(room.item, item)
+            .innerJoin(item.member, member)
+            .where(room.id.eq(roomId))
+            .fetchOne();
+    }
 }

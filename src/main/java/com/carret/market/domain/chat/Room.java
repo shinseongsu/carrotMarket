@@ -30,4 +30,5 @@ public class Room {
         this.item = item;
         this.buyer = buyer;
     }
+
 }

@@ -82,6 +82,10 @@ public class Member extends BaseEntity implements MemberDetail {
         this.point += point;
     }
 
+    public void minusPoint(int point) {
+        this.point -= point;
+    }
+
     @Override
     public Long getId() {
         return id;

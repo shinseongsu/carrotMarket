@@ -14,7 +14,8 @@
   <main class="min-h-screen bg-gray-100 pt-20">
     <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
       <div class="w-4/5 h-4/5 m-auto pt-10 pb-5">
-        <h1 class="font-bold text-orange-500 text-2xl">나의 판매목록</h1>
+        <h1 class="font-bold text-orange-500 text-2xl" th:if="${roomInfo == null}">나의 판매목록</h1>
+        <h1 class="font-bold text-orange-500 text-2xl" th:unless="${roomInfo == null}">포인트 전송</h1>
 
         <div class="w-3/5 pb-40 mx-auto mt-16">
           <div class="flex flex-col mb-10">
@@ -51,10 +52,16 @@
             <div class="py-4" onclick="deleteLastIndex()">←</div>
           </div>
 
+          <div>
+            <input class="sellerId" type="hidden" th:value="${roomInfo.sellerId}" />
+            <input class="amount" type="hidden" th:value="${roomInfo.amount}" />
+          </div>
+
           <div
               class="w-4/5 mx-auto py-3 bg-orange-500 text-center rounded text-white cursor-pointer"
           >
-            <button id="charge">충전하기</button>
+            <button id="charge" th:if="${roomInfo == null}">충전하기</button>
+            <button id="pay" th:unless="${roomInfo == null}">전송하기</button>
           </div>
         </div>
       </div>
@@ -66,54 +73,90 @@
 
 <th:block layout:fragment="script">
   <script type="text/javascript">
-    let point = 0;
+    let point = Number(document.querySelector('.amount').value);
+    const sellerId = document.querySelector('.sellerId').value;
+    const roomId = new URLSearchParams(location.search).get('roomId');
     const email = '[[ ${#authentication.getPrincipal().getMemberDetail().getEmail()} ]]';
     const name = '[[ ${#authentication.getPrincipal().getMemberDetail().getName()} ]]';
     const geolocation = '[[ ${#authentication.getPrincipal().getMemberDetail().getGeolocation()} ]]';
     const $point = document.getElementById("point");
     const $charge = document.getElementById("charge");
+    const $pay = document.getElementById('pay');
 
-    $charge.addEventListener('click', (e) => {
-      IMP.init('imp14806872');
+    render();
 
-      IMP.request_pay({
-        pg : 'html5_inicis',
-        pay_method : 'card',
-        merchant_uid : 'merchant_' + new Date().getTime(),
-        name : '사과마켓 포인트 충전',
-        amount : point,
-        buyer_email : email,
-        buyer_name : name,
-        buyer_tel : '010-1234-5678',
-        buyer_addr : geolocation,
-        buyer_postcode : '123-456'
-      }, function(rsp) {
-        if ( rsp.success ) {
-          console.log(rsp);
+    if($pay) {
+      $pay.addEventListener('click', (e) => {
+        fetch('/point/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sendId: sellerId,
+            amount: point,
+            roomId: roomId
+          })
+        }).then((response) => response.json())
+        .then(((response) => {
+          alert(response.message);
 
-          fetch('/point', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: rsp.buyer_email,
-              description: rsp.name,
-              amount: rsp.paid_amount,
-              currency: rsp.currency,
-              pgType: rsp.pg_provider.toUpperCase(),
-              pgTid: rsp.pg_tid,
-              merchatUid: rsp.merchant_uid
-            })
-          }).then((response) => response)
-          .then(((response) => alert(response.message)));
+          if(response.status) {
+            location.href = `/chat/room/${roomId}`;
+          }
+        }));
+      })
+    }
 
-          location.href = '/myPage';
-        } else {
-          alert('결제 실패하였습니다.');
-        }
+    if($charge) {
+      $charge.addEventListener('click', (e) => {
+        IMP.init('imp14806872');
+
+        IMP.request_pay({
+          pg: 'html5_inicis',
+          pay_method: 'card',
+          merchant_uid: 'merchant_' + new Date().getTime(),
+          name: '사과마켓 포인트 충전',
+          amount: point,
+          buyer_email: email,
+          buyer_name: name,
+          buyer_tel: '010-1234-5678',
+          buyer_addr: geolocation,
+          buyer_postcode: '123-456'
+        }, function (rsp) {
+          if (rsp.success) {
+            console.log(rsp);
+
+            fetch('/point', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: rsp.buyer_email,
+                description: rsp.name,
+                amount: rsp.paid_amount,
+                currency: rsp.currency,
+                pgType: rsp.pg_provider.toUpperCase(),
+                pgTid: rsp.pg_tid,
+                merchatUid: rsp.merchant_uid
+              })
+            }).then((response) => response.json())
+            .then(((response) => {
+              alert(response.message);
+
+              if(response.status) {
+
+              }
+            }));
+
+            location.href = '/myPage';
+          } else {
+            alert('결제 실패하였습니다.');
+          }
+        });
       });
-    });
+    }
 
     function plus(number) {
       point = Number(point) + number;

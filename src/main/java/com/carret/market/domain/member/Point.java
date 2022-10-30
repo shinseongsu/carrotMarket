@@ -58,4 +58,5 @@ public class Point extends BaseTimeEntity {
         this.merchantId = merchantId;
         this.member = member;
     }
+
 }

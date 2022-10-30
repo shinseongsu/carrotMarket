@@ -46,14 +46,25 @@
           </div>
         </div>
 
-        <div class="h-10 mt-10">
-          <input
-              class="sendMessage border-orange-500 border w-4/5 h-10 rounded"
-              type="text"
-          />
-          <button id="send" class="bg-orange-500 w-1/6 h-10 rounded-lg ml-2">
-            전송
-          </button>
+        <div class="h-15 mt-10">
+          <div class="w-24">
+            <a th:href="'/point/send?roomId=' + ${chatResponse.roomId}">
+              <p
+                  class="w-24 text-center rounded-xl bg-orange-500 text-white mb-5 py-1"
+              >
+                포인트 전송
+              </p>
+            </a>
+          </div>
+          <div>
+            <input
+                class="sendMessage border-orange-500 border w-4/5 h-10 rounded"
+                type="text"
+            />
+            <button id="send" class="bg-orange-500 w-1/6 h-10 rounded-lg ml-2">
+              전송
+            </button>
+          </div>
         </div>
       </div>
     </section>

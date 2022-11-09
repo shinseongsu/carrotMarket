@@ -1,4 +1,4 @@
-package com.carret.market.web.chat.dto;
+package com.carret.market.application.chat.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ChatDto {
+public class MessageRequest {
 
     private String message;
     private Long memberId;
@@ -18,19 +18,9 @@ public class ChatDto {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime regDate = LocalDateTime.now();
 
-    public ChatDto(String message, Long memberId, Long roomId) {
+    public MessageRequest(String message, Long memberId, Long roomId) {
         this.message = message;
         this.memberId = memberId;
         this.roomId = roomId;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatDto{" +
-            "message='" + message + '\'' +
-            ", memberId=" + memberId +
-            ", roomId=" + roomId +
-            ", regDate=" + regDate +
-            '}';
     }
 }

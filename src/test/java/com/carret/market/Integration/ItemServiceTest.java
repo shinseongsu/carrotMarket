@@ -2,7 +2,6 @@ package com.carret.market.Integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static reactor.core.publisher.Mono.when;
 
 import com.carret.market.application.item.ItemService;
@@ -18,10 +17,10 @@ import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.domain.member.Roletype;
 import com.carret.market.infrastructure.file.S3UploadUtils;
 import com.carret.market.infrastructure.file.UploadFile;
-import com.carret.market.web.item.dto.ItemInfoDto;
-import com.carret.market.web.item.dto.ItemListDto;
-import com.carret.market.web.item.dto.ItemRequest;
-import com.carret.market.web.item.dto.ItemRequestDto;
+import com.carret.market.application.item.dto.ItemInfo;
+import com.carret.market.application.item.dto.ItemList;
+import com.carret.market.application.item.dto.ItemPagingRequest;
+import com.carret.market.application.item.dto.ItemRequest;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,10 +67,10 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("이미지 전체 리스트 보여주기")
     @Test
     void findByItemList() {
-        List<ItemListDto> itemList = itemService.findByItemList(new ItemRequest());
+        List<ItemList> itemList = itemService.findByItemList(new ItemPagingRequest());
 
         List<String> itemNameList = itemList.stream()
-            .map(ItemListDto::getTitle)
+            .map(ItemList::getTitle)
             .collect(Collectors.toList());
 
         assertThat(itemNameList).containsExactly("test1", "test2");
@@ -82,7 +81,7 @@ public class ItemServiceTest extends IntegrationTest {
     void save() throws IOException {
         Mockito.when(s3UploadUtils.uploadFile(any())).thenReturn(new UploadFile("원본이름", "변경된 이름", "저장된 URL"));
 
-        ItemRequestDto itemRequestDto = ItemRequestDto.builder()
+        ItemRequest itemRequestDto = ItemRequest.builder()
             .title("테스트 상품")
             .category(Category.BEAUTY)
             .price(1000)
@@ -97,7 +96,7 @@ public class ItemServiceTest extends IntegrationTest {
     @DisplayName("상품 상세정보를 조회합니다.")
     @Test
     void findByItemId() {
-        ItemInfoDto itemInfoDto = itemService.findByItemId(상품1.getId(), 회원.getId());
+        ItemInfo itemInfoDto = itemService.findByItemId(상품1.getId(), 회원.getId());
 
         assertThat(itemInfoDto.getTitle()).isEqualTo(상품1.getTitle());
     }

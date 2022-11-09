@@ -1,5 +1,8 @@
 package com.carret.market.application.chat;
 
+import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_ITEM;
+import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_MEMBER;
+
 import com.carret.market.domain.chat.Message;
 import com.carret.market.domain.chat.MessageRepository;
 import com.carret.market.domain.chat.MessageStatus;
@@ -11,8 +14,8 @@ import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
 import com.carret.market.global.exception.ItemNotFoundException;
 import com.carret.market.global.exception.MemberNotFoundException;
-import com.carret.market.web.chat.dto.ChatResponse;
-import com.carret.market.web.member.dto.RoomResponse;
+import com.carret.market.application.chat.dto.ChatResponse;
+import com.carret.market.application.member.dto.RoomResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,14 +23,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChatService {
+
+    private static final String ENTER_MESSAGE = "입장하였습니다.";
 
     private final RoomRepository roomRepository;
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ChatResponse enterRoom(Long itemId, String email) {
         Room room = roomRepository.findByItemIdAndEmail(itemId, email)
             .orElseGet(() -> this.createRoom(itemId, email));
@@ -37,15 +43,14 @@ public class ChatService {
 
     private Room createRoom(Long itemId, String email) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+            .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
 
         Item item = itemRepository.findById(itemId)
-            .orElseThrow(() -> new ItemNotFoundException("존재 하지 않는 아이템입니다."));
+            .orElseThrow(() -> new ItemNotFoundException(NOT_FOUND_ITEM));
 
         Room room = new Room(item, member);
 
-        messageRepository.save(new Message(member.getNickname() + "입장하였습니다.", room, member, MessageStatus.NOTICE));
-
+        messageRepository.save(new Message(member.getNickname() + ENTER_MESSAGE, room, member, MessageStatus.NOTICE));
         return roomRepository.save(room);
     }
 

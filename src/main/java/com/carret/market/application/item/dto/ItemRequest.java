@@ -1,4 +1,4 @@
-package com.carret.market.web.item.dto;
+package com.carret.market.application.item.dto;
 
 import com.carret.market.domain.item.Category;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @ToString
-public class ItemRequestDto {
+public class ItemRequest {
 
     @NotBlank(message = "제목은 필수 입력값입니다.")
     private String title;
@@ -40,7 +40,7 @@ public class ItemRequestDto {
     private String description;
 
     @Builder
-    public ItemRequestDto(String title, Long itemId, Category category, Integer price, String description) {
+    public ItemRequest(String title, Long itemId, Category category, Integer price, String description) {
         this.title = title;
         this.itemId = itemId;
         this.category = category;

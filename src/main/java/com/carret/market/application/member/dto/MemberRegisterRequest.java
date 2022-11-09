@@ -1,4 +1,4 @@
-package com.carret.market.web.member.dto;
+package com.carret.market.application.member.dto;
 
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberRegisterDto {
+public class MemberRegisterRequest {
 
     @NotBlank(message = "이메일은 필수 입력값입니다.")
     private String email;
@@ -30,7 +30,7 @@ public class MemberRegisterDto {
     private String location;
 
     @Builder
-    public MemberRegisterDto(String email, String name, String nickname, String password,
+    public MemberRegisterRequest(String email, String name, String nickname, String password,
         String passwordConfirm, MultipartFile previewUrl, String location) {
         this.email = email;
         this.name = name;

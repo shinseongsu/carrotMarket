@@ -1,9 +1,8 @@
 package com.carret.market.web.member;
 
 import com.carret.market.application.member.MemberService;
-import com.carret.market.web.member.dto.MemberRegisterDto;
+import com.carret.market.application.member.dto.MemberRegisterRequest;
 import com.carret.market.web.member.validate.RegisterValidate;
-import java.io.IOException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -30,22 +29,21 @@ public class RegisterController {
     }
 
     @GetMapping
-    public String registerView(Model model) {
-        model.addAttribute("memberRegisterDto", new MemberRegisterDto());
+    public String registerForm(Model model) {
+        model.addAttribute("memberRegisterDto", new MemberRegisterRequest());
 
         return "member/register";
     }
 
     @PostMapping
-    public String register(@Valid @ModelAttribute MemberRegisterDto memberRegisterDto,
-        BindingResult errors) throws IOException {
+    public String registerForm(@Valid @ModelAttribute MemberRegisterRequest memberRegisterDto,
+                                BindingResult errors) {
 
         if(errors.hasErrors()) {
             return "member/register";
         }
 
         memberService.save(memberRegisterDto);
-
         return "redirect:/login";
     }
 

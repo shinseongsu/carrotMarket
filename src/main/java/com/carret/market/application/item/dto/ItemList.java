@@ -1,4 +1,4 @@
-package com.carret.market.web.item.dto;
+package com.carret.market.application.item.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ItemListDto {
+public class ItemList {
 
     private Long itemId;
     private String title;
@@ -18,7 +18,7 @@ public class ItemListDto {
     private Integer likeCount;
 
     @Builder
-    public ItemListDto(Long itemId, String title, String location, Integer price,
+    public ItemList(Long itemId, String title, String location, Integer price,
         String thumbnail, Integer likeCount) {
         this.itemId = itemId;
         this.title = title;

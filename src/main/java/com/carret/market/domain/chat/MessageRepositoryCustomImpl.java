@@ -5,11 +5,9 @@ import static com.carret.market.domain.chat.QRoom.room;
 import static com.carret.market.domain.item.QItem.item;
 import static com.carret.market.domain.member.QMember.member;
 
-import com.carret.market.web.chat.dto.ChatInfo;
-import com.carret.market.web.chat.dto.ChatResponse;
+import com.carret.market.application.chat.dto.ChatInfo;
+import com.carret.market.application.chat.dto.ChatResponse;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

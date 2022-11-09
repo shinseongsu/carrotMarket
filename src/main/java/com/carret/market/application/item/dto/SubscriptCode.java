@@ -1,4 +1,4 @@
-package com.carret.market.web.item.dto;
+package com.carret.market.application.item.dto;
 
 public enum SubscriptCode {
     SUBSCRIPT,

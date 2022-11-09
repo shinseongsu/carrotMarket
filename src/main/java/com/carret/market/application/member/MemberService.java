@@ -1,6 +1,7 @@
 package com.carret.market.application.member;
 
-import com.carret.market.application.auth.AuthUserDetailsService;
+import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_MEMBER;
+
 import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
 import com.carret.market.domain.member.MemberRepository;
@@ -10,33 +11,21 @@ import com.carret.market.domain.member.Roletype;
 import com.carret.market.global.exception.MemberNotFoundException;
 import com.carret.market.infrastructure.file.S3UploadUtils;
 import com.carret.market.infrastructure.file.UploadFile;
-import com.carret.market.support.user.MemberDetail;
-import com.carret.market.support.user.UserDetail;
 import com.carret.market.support.user.UserDetailService;
-import com.carret.market.web.member.dto.MemberChangeDto;
-import com.carret.market.web.member.dto.MemberInfoDto;
-import com.carret.market.web.member.dto.MemberPointResponse;
-import com.carret.market.web.member.dto.MemberRegisterDto;
-import com.carret.market.web.member.dto.MyItemInfo;
-import com.carret.market.web.member.dto.PointRequest;
-import com.carret.market.web.member.dto.SubscriptResponse;
+import com.carret.market.application.member.dto.MemberChange;
+import com.carret.market.application.member.dto.MemberInfo;
+import com.carret.market.application.member.dto.MemberPointResponse;
+import com.carret.market.application.member.dto.MemberRegisterRequest;
+import com.carret.market.application.member.dto.MyItemInfo;
+import com.carret.market.application.member.dto.PointRequest;
+import com.carret.market.application.member.dto.SubscriptResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,31 +45,30 @@ public class MemberService {
     private final PointRepository pointRepository;
     private final UserDetailService userDetailService;
 
-    private static final String EMPTY_MEMBER = "회웜이 존재하지 않습니다.";
-
-    public void save(MemberRegisterDto memberRegisterDto) {
-        UploadFile uploadFile = fileService.uploadFile(memberRegisterDto.getPreviewUrl());
+    public void save(MemberRegisterRequest memberRegisterRequest) {
+        UploadFile uploadFile = fileService.uploadFile(memberRegisterRequest.getPreviewUrl());
 
         memberRepository.save(
             Member.builder()
-                .email(memberRegisterDto.getEmail())
-                .password(passwordEncoder.encode(memberRegisterDto.getPassword()))
-                .name(memberRegisterDto.getName())
-                .nickname(memberRegisterDto.getNickname())
+                .email(memberRegisterRequest.getEmail())
+                .password(passwordEncoder.encode(memberRegisterRequest.getPassword()))
+                .name(memberRegisterRequest.getName())
+                .nickname(memberRegisterRequest.getNickname())
                 .role(Roletype.ROLE_MEMBER)
                 .previewUrl(Objects.isNull(uploadFile) ? null : uploadFile.getFileUploadUrl())
                 .joinedAt(LocalDateTime.now())
-                .geolocation(memberRegisterDto.getLocation())
+                .geolocation(memberRegisterRequest.getLocation())
                 .build());
     }
 
+    @Transactional(readOnly = true)
     public Optional<Member> findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
 
-    public void changeMemberInfo(String email, MemberChangeDto memberChangeDto) throws IOException {
+    public void changeMemberInfo(String email, MemberChange memberChangeDto) throws IOException {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException(EMPTY_MEMBER));
+            .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
 
         if (isChangePreview(memberChangeDto.getPreviewUrl())) {
             UploadFile uploadFile = fileService.uploadFile(memberChangeDto.getPreviewUrl());
@@ -101,27 +89,27 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<MyItemInfo> selectMyItemList(Long memberId) {
+    public List<MyItemInfo> findMyItemList(Long memberId) {
         return memberRepository.findMyItemInfoByMemberId(memberId);
     }
 
 
     @Transactional(readOnly = true)
-    public MemberInfoDto selectMyPage(String email) {
+    public MemberInfo findMyPage(String email) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new MemberNotFoundException("회원이 존재하지 않습니다."));
+            .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
 
-        return MemberInfoDto.of(member);
+        return MemberInfo.of(member);
     }
 
     @Transactional(readOnly = true)
-    public MemberPointResponse selectPoint(Long memberId) {
+    public MemberPointResponse findPoint(Long memberId) {
         return memberRepository.findPointByMemberId(memberId);
     }
 
     public void pointCharge(PointRequest pointRequest, Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+            .orElseThrow(() -> new MemberNotFoundException(NOT_FOUND_MEMBER));
 
         pointRepository.save(Point.builder()
             .description(pointRequest.getDescription())

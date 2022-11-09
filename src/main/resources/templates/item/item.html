@@ -12,7 +12,7 @@
   <main class="min-h-screen bg-gray-100 pt-20">
     <section class="mt-20 bg-white w-4/5 mx-auto rounded-lg">
       <form method="post" th:action="@{/item}" enctype="multipart/form-data" role="form"
-            th:object="${itemRequestDto}">
+            th:object="${itemRequest}">
         <div class="w-4/5 h-4/5 m-auto pt-5 pb-10">
           <h1 class="mb-10 text-lg font-bold">중고물품 등록</h1>
 
@@ -27,7 +27,7 @@
             </div>
             <div id="file-list"
                  class="ml-10 min-h-full w-full flex border-solid border-2 border-gray-500 rounded overflow-scroll" >
-              <div th:each="itemImage, i : ${itemRequestDto.originalImageUrl}" th:id="'originalFile' + ${i.count}" class="filebox relative ml-3 top-0">
+              <div th:each="itemImage, i : ${itemRequest.originalImageUrl}" th:id="'originalFile' + ${i.count}" class="filebox relative ml-3 top-0">
                 <img class="h-15 w-20 relative" th:src="${itemImage.url}">
                 <i class="fa-solid fa-circle-xmark h-6 w-6 absolute top-0 left-16" th:onClick="'originalDeleteFile(' + ${i.count} + ')'" ></i>
                 <input type="text" class="hidden" th:id="'itemImageId' + ${i.count}" th:value="${itemImage.itemImageId}" />
@@ -102,9 +102,9 @@
           <input type="text" class="hidden" id="itemId" name="itemId" th:field="*{itemId}">
 
           <article class="w-full text-center">
-            <input th:if="${itemRequestDto.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
+            <input th:if="${itemRequest.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
                    value="글 작성" id="submitButton"/>
-            <input th:unless="${itemRequestDto.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
+            <input th:unless="${itemRequest.itemId == null}" class="text-center bg-orange-500 rounded-md py-3 px-10 text-white" type="submit"
                    value="글 수정" id="submitButton"/>
           </article>
         </div>
@@ -130,7 +130,7 @@
     const removeUrl = [];
 
     if(category.length != 0) {
-      $dropdownDefault.textContent = '[[ ${itemRequestDto.getCategoryName()} ]]';
+      $dropdownDefault.textContent = '[[ ${itemRequest.getCategoryName()} ]]';
     }
 
     $textarea.addEventListener('keyup', () => {

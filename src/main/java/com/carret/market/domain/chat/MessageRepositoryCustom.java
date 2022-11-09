@@ -1,6 +1,6 @@
 package com.carret.market.domain.chat;
 
-import com.carret.market.web.chat.dto.ChatResponse;
+import com.carret.market.application.chat.dto.ChatResponse;
 
 public interface MessageRepositoryCustom {
 

@@ -1,10 +1,11 @@
-package com.carret.market.web.member.dto;
+package com.carret.market.application.member.dto;
 
 import com.carret.market.domain.item.ItemStatus;
 import lombok.Getter;
 
 @Getter
 public class MyItemInfo {
+
     private final Long itemId;
     private final String imageUrl;
     private final String title;

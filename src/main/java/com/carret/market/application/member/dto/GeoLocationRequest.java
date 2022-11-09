@@ -1,4 +1,4 @@
-package com.carret.market.web.member.dto;
+package com.carret.market.application.member.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeoLocationRequestDto {
+public class GeoLocationRequest {
     private String coords;
 }

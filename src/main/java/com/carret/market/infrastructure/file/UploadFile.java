@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class UploadFile {
 
-    private final String originalFileName;  // 원본 파일 이름
-    private final String storeFileName;     // 저장된 파일 이름
-    private final String fileUploadUrl;     // 파일 저장 경로
+    private final String originalFileName;
+    private final String storeFileName;
+    private final String fileUploadUrl;
 
     public UploadFile(String originalFileName, String storeFileName, String fileUploadUrl) {
         this.originalFileName = originalFileName;

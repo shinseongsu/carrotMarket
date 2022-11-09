@@ -1,12 +1,13 @@
-package com.carret.market.web.item.dto;
+package com.carret.market.application.item.dto;
 
 import com.carret.market.domain.item.Category;
+import com.carret.market.infrastructure.file.ImageCode;
 import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 
 @Getter
-public class ItemInfoDto {
+public class ItemInfo {
+
     private Long itemId;
     private String title;
     private String detail;
@@ -21,7 +22,7 @@ public class ItemInfoDto {
     private boolean isOwnerLikes;
     private boolean isOwnerItem;
 
-    public ItemInfoDto(Long itemId, String title, String detail, Integer price,
+    public ItemInfo(Long itemId, String title, String detail, Integer price,
         String location, Integer viewCount,
         String previewUrl, String nickname, Category category, boolean isOwnerItem) {
         this.itemId = itemId;
@@ -30,7 +31,7 @@ public class ItemInfoDto {
         this.price = price;
         this.location = location;
         this.viewCount = viewCount;
-        this.previewUrl = Objects.isNull(previewUrl) ? "/images/common/profile.png" : previewUrl;
+        this.previewUrl = ImageCode.from(previewUrl);
         this.nickname = nickname;
         this.category = category.getValue();
         this.isOwnerItem = isOwnerItem;

@@ -1,4 +1,4 @@
-package com.carret.market.web.member.dto;
+package com.carret.market.application.member.dto;
 
 import lombok.Getter;
 

@@ -29,19 +29,19 @@
           </div>
 
           <div
-              class="h-12 w-4/5 mx-auo border-solid border-2 border-orange-500 mt-20 rounded-xl"
+              class="h-12 mx-auo border-solid border-2 border-orange-500 mt-20 rounded-xl"
           >
             <div class="flex mt-2">
               <p class="font-bold text-orange-500 text-xl mx-5">pay</p>
-              <p class="mt-1 font-bold" th:text="${memberPointInfo.point}">0원</p>
+              <p class="mt-1 font-bold" th:text="${#numbers.formatInteger(memberPointInfo.point, 0, 'COMMA')}">0원</p>
 
-              <div class="flex flex-row-reverse w-2/4">
-                <a href="/point"> 충전하기 </a>
+              <div class="w-full flex flex-col-reverse">
+                <a class="flex flex-row-reverse mr-10" href="/point"> 충전하기 </a>
               </div>
             </div>
           </div>
 
-          <div class="menu w-4/5 mt-20">
+          <div class="menu mt-20">
             <div class="w-4/5 justify-between flex mx-auto">
               <div>
                 <div class="w-30 rounded-full bg-orange-300 p-5">

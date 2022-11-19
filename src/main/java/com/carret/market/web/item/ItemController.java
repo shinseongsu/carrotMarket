@@ -1,12 +1,7 @@
 package com.carret.market.web.item;
 
 import com.carret.market.application.item.ItemService;
-import com.carret.market.application.item.dto.ItemInfo;
-import com.carret.market.application.item.dto.ItemList;
-import com.carret.market.application.item.dto.ItemPagingRequest;
-import com.carret.market.application.item.dto.ItemRequest;
-import com.carret.market.application.item.dto.SubscriptRequest;
-import com.carret.market.application.item.dto.SubscriptResult;
+import com.carret.market.application.item.dto.*;
 import com.carret.market.domain.item.Category;
 import com.carret.market.domain.member.Member;
 import com.carret.market.support.authorization.AuthenticationPrincipal;
@@ -105,6 +100,12 @@ public class ItemController {
     @PostMapping("/item/list")
     public ResponseEntity<List<ItemList>> searchItemList(@RequestBody ItemPagingRequest itemRequest) {
         return ResponseEntity.ok(itemService.findByItemList(itemRequest));
+    }
+
+    @PostMapping("/item/confirmed/{roomId}")
+    public ResponseEntity<ConfirmResponse> itemConfirmed(@PathVariable Long roomId) {
+        itemService.itemConfirm(roomId);
+        return ResponseEntity.ok(new ConfirmResponse("수정되었습나다."));
     }
 
 }

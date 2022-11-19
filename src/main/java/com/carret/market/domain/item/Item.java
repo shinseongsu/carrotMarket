@@ -79,4 +79,8 @@ public class Item extends BaseEntity {
     public void viewCountIncrease() {
         this.viewCount += 1;
     }
+
+    public void sold() {
+        status = ItemStatus.SOLD;
+    }
 }

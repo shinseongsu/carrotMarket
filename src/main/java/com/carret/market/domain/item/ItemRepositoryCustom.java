@@ -17,4 +17,6 @@ public interface ItemRepositoryCustom {
     Optional<Likes> findLikesByItemIdAndMemberId(Long memberId, Long itemId);
 
     Optional<ItemRequest> findEditItemByItemId(Long itemId);
+
+    Optional<Item> findItemByRoomId(Long roomId);
 }

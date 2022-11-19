@@ -2,6 +2,7 @@ package com.carret.market.application.item;
 
 import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_ITEM;
 
+import com.carret.market.application.item.dto.*;
 import com.carret.market.domain.item.Item;
 import com.carret.market.domain.item.ItemImage;
 import com.carret.market.domain.item.ItemImageRepository;
@@ -10,14 +11,12 @@ import com.carret.market.domain.item.ItemStatus;
 import com.carret.market.domain.like.Likes;
 import com.carret.market.domain.like.LikesRepository;
 import com.carret.market.domain.member.Member;
+import com.carret.market.global.exception.AlreadyItemStatusException;
+import com.carret.market.global.exception.ErrorCode;
 import com.carret.market.global.exception.ItemNotFoundException;
 import com.carret.market.infrastructure.file.S3UploadUtils;
 import com.carret.market.infrastructure.file.UploadFile;
-import com.carret.market.application.item.dto.ItemInfo;
-import com.carret.market.application.item.dto.ItemList;
-import com.carret.market.application.item.dto.ItemPagingRequest;
-import com.carret.market.application.item.dto.ItemRequest;
-import com.carret.market.application.item.dto.SubscriptResult;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -128,6 +127,17 @@ public class ItemService {
 
         likesRepository.deleteById(likesOptional.get().getId());
         return SubscriptResult.cancel();
+    }
+
+    @Transactional
+    public void itemConfirm(Long roomid) {
+        Item item = itemRepository.findItemByRoomId(roomid)
+                .orElseThrow(() -> new ItemNotFoundException(NOT_FOUND_ITEM));
+
+        if(item.getStatus().equals(ItemStatus.SOLD)) {
+            throw new AlreadyItemStatusException(ErrorCode.ALREADY_ITEM_SOLD);
+        }
+        item.sold();
     }
 
 }

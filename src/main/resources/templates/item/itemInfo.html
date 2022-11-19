@@ -142,7 +142,7 @@
                 <img th:class="'likes '+ ${itemInfo.isOwnerLikes ? 'active' : ''}" />
               </div>
               <div class="flex">
-                <p class="font-medium" th:text="${itemInfo.price}">1,000</p>원
+                <p class="font-medium" th:text="${#numbers.formatInteger(itemInfo.price, 0, 'COMMA')}">1,000</p>원
               </div>
             </div>
 

@@ -153,10 +153,9 @@ public class MemberService {
         member.minusPoint(sendPointRequest.getAmount());
         sellerMember.charge(sendPointRequest.getAmount());
 
-
         pointRepository.save( new Point("포인트 전송", sendPointRequest.getAmount(), PgType.APPLE_MARKET_PAY, Currency.KRW, "SEND", "SEND", member ));
         pointRepository.save( new Point("포인트 받기", sendPointRequest.getAmount(), PgType.APPLE_MARKET_PAY, Currency.KRW, "GET", "GET", sellerMember ));
-        applicationEventPublisher.publishEvent( new MessageRequest( String.format(SEND_MESSAGE, member.getNickname(), sendPointRequest.getAmount()), member.getId(), sendPointRequest.getRoomId() ) );
+        applicationEventPublisher.publishEvent( new MessageRequest( String.format(SEND_MESSAGE, member.getNickname(), sendPointRequest.getAmount()), member.getId(), sendPointRequest.getRoomId(), MessageStatus.NOTICE ) );
     }
 
     private void checkMinuPoint(Member member, int amount) {

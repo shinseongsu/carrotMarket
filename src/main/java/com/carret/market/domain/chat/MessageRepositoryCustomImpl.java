@@ -7,6 +7,7 @@ import static com.carret.market.domain.member.QMember.member;
 
 import com.carret.market.application.chat.dto.ChatInfo;
 import com.carret.market.application.chat.dto.ChatResponse;
+import com.carret.market.domain.member.Member;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
@@ -27,7 +28,7 @@ public class MessageRepositoryCustomImpl implements MessageRepositoryCustom {
                 message1.message,
                 member.nickname,
                 member.previewUrl,
-                item.member.email.eq(email),
+                member.email.eq(email),
                 message1.messageStatus
             ))
             .from(message1)
@@ -40,7 +41,15 @@ public class MessageRepositoryCustomImpl implements MessageRepositoryCustom {
             .orderBy(message1.sendDate.desc())
             .fetch();
 
-        return new ChatResponse(enterRoom.getId(), chatInfos);
+        Member own = queryFactory.selectFrom(room)
+                .innerJoin(room.item, item)
+                .innerJoin(item.member, member)
+                .where(room.eq(enterRoom))
+                .fetchOne()
+                .getItem()
+                .getMember();
+
+        return new ChatResponse(enterRoom.getId(), own.getEmail().equals(email), chatInfos);
     }
 
     @Override
@@ -64,6 +73,14 @@ public class MessageRepositoryCustomImpl implements MessageRepositoryCustom {
             .orderBy(message1.sendDate.desc())
             .fetch();
 
-        return new ChatResponse(roomId, chatInfos);
+        Member own = queryFactory.selectFrom(room)
+                .innerJoin(room.item, item)
+                .innerJoin(item.member, member)
+                .where(room.id.eq(roomId))
+                .fetchOne()
+                .getItem()
+                .getMember();
+
+        return new ChatResponse(roomId, own.getId().equals(memberId), chatInfos);
     }
 }

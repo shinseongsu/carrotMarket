@@ -37,7 +37,7 @@ public class MessageService {
         Room room = roomRepository.findById(messageRequest.getRoomId())
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 채팅방입니다."));
 
-        messageRepository.save(new Message(messageRequest.getMessage(), room, member));
+        messageRepository.save(new Message(messageRequest.getMessage(), room, member, messageRequest.getMessageStatus()));
         template.convertAndSend(CHAT_EXCHANGE_NAME, "room." + messageRequest.getRoomId(), ChatDetail.of(messageRequest, member));
     }
 

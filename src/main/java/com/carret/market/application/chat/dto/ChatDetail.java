@@ -30,7 +30,7 @@ public class ChatDetail {
             .message(messageRequest.getMessage())
             .nickName(member.getNickname())
             .profile(ImageCode.from(member.getPreviewUrl()))
-            .status(MessageStatus.MESSAGE)
+            .status(messageRequest.getMessageStatus())
             .build();
     }
 

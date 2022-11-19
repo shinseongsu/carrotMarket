@@ -55,5 +55,4 @@ public class Message extends BaseTimeEntity {
         this.member = member;
         this.messageStatus = messageStatus;
     }
-
 }

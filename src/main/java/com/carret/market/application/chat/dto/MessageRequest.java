@@ -1,5 +1,6 @@
 package com.carret.market.application.chat.dto;
 
+import com.carret.market.domain.chat.MessageStatus;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import java.time.LocalDateTime;
@@ -14,13 +15,15 @@ public class MessageRequest {
     private String message;
     private Long memberId;
     private Long roomId;
+    private MessageStatus messageStatus;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private final LocalDateTime regDate = LocalDateTime.now();
 
-    public MessageRequest(String message, Long memberId, Long roomId) {
+    public MessageRequest(String message, Long memberId, Long roomId, MessageStatus messageStatus) {
         this.message = message;
         this.memberId = memberId;
         this.roomId = roomId;
+        this.messageStatus = messageStatus;
     }
 }

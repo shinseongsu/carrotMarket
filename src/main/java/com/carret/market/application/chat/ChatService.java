@@ -3,6 +3,7 @@ package com.carret.market.application.chat;
 import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_ITEM;
 import static com.carret.market.global.exception.ErrorCode.NOT_FOUND_MEMBER;
 
+import com.carret.market.application.chat.dto.PayFormResponse;
 import com.carret.market.domain.chat.Message;
 import com.carret.market.domain.chat.MessageRepository;
 import com.carret.market.domain.chat.MessageStatus;
@@ -32,8 +33,7 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
-
-    @Transactional(readOnly = true)
+    
     public ChatResponse enterRoom(Long itemId, String email) {
         Room room = roomRepository.findByItemIdAndEmail(itemId, email)
             .orElseGet(() -> this.createRoom(itemId, email));
@@ -62,6 +62,10 @@ public class ChatService {
     @Transactional(readOnly = true)
     public ChatResponse findByChattingList(Long roomId, Long memberId) {
         return messageRepository.findByRoomIdAndMemberId(roomId, memberId);
+    }
+
+    public PayFormResponse findPayFormResponse(Long roomId) {
+        return roomRepository.findSellerIdAndAmountByRoomId(roomId);
     }
 
 }

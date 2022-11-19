@@ -1,5 +1,6 @@
 package com.carret.market.domain.item;
 
+import static com.carret.market.domain.chat.QRoom.room;
 import static com.carret.market.domain.item.QItem.item;
 import static com.carret.market.domain.item.QItemImage.itemImage;
 import static com.carret.market.domain.like.QLikes.likes;
@@ -44,7 +45,8 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
             .fetchJoin()
             .where(
                 itemImage.thumbnail.isTrue(),
-                searchContains(itemRequest.getSearch())
+                searchContains(itemRequest.getSearch()),
+                item.status.eq(ItemStatus.SELL)
             )
             .groupBy(item.id, itemImage.url)
             .offset(itemRequest.getOffset() * itemRequest.getSize())
@@ -142,5 +144,15 @@ public class ItemRepositoryCustomImpl implements ItemRepositoryCustom {
 
         itemRequestDto.addOriginalImageUrl(originalImageUrl);
         return Optional.ofNullable(itemRequestDto);
+    }
+
+    @Override
+    public Optional<Item> findItemByRoomId(Long roomId) {
+        return Optional.ofNullable(
+                jpaQueryFactory.selectFrom(room)
+                    .innerJoin(room.item, item)
+                    .where(room.id.eq(roomId))
+                    .fetchOne()
+                    .getItem());
     }
 }

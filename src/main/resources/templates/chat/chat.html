@@ -21,8 +21,8 @@
           <div th:each="chatInfo : ${chatResponse.chatInfos}">
 
             <div th:if="${#strings.toString(chatInfo.status)} == 'NOTICE'">
-              <div class="w-3/5 h-8 pt-1 text-center rounded-full bg-slate-200 flex-col mx-auto my-6">
-                <p th:text="${chatInfo.message}"></p>
+              <div class="w-3/5 h-10 pt-1 text-center rounded-full bg-slate-200 flex-col mx-auto my-6">
+                <p class="pt-1" th:text="${chatInfo.message}"></p>
               </div>
             </div>
 
@@ -30,7 +30,7 @@
               <div th:if="${chatInfo.own}">
                 <div class="flex flex-row-reverse space-x-4 space-x-reverse my-4">
                   <img th:src="${chatInfo.profile}" class="w-10 rounded-full" />
-                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2" th:text="${chatInfo.message}">
+                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2 pb-2" th:text="${chatInfo.message}">
                   </p>
                 </div>
               </div>
@@ -38,7 +38,7 @@
               <div th:unless="${chatInfo.own}">
                 <div class="text-left flex space-x-4 my-4">
                   <img th:src="${chatInfo.profile}" class="w-10 rounded-full" />
-                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2" th:text="${chatInfo.message}">
+                  <p class="bg-orange-500 text-white rounded-lg px-10 pt-2 pb-2" th:text="${chatInfo.message}">
                   </p>
                 </div>
               </div>
@@ -46,14 +46,31 @@
           </div>
         </div>
 
-        <div class="h-10 mt-10">
-          <input
-              class="sendMessage border-orange-500 border w-4/5 h-10 rounded"
-              type="text"
-          />
-          <button id="send" class="bg-orange-500 w-1/6 h-10 rounded-lg ml-2">
-            전송
-          </button>
+        <div class="h-15 mt-10">
+          <div th:if="${chatResponse.ownRoom} == true" class="w-24 cursor-pointer confirmed">
+            <p class="w-24 text-center rounded-xl bg-orange-500 text-white mb-5 py-1">
+              구매 확정
+            </p>
+          </div>
+          <div th:unless="${chatResponse.ownRoom} == true" class="w-24 cursor-pointer">
+            <a th:href="'/point/send?roomId=' + ${chatResponse.roomId}">
+              <p
+                  class="w-24 text-center rounded-xl bg-orange-500 text-white mb-5 py-1"
+              >
+                포인트 전송
+              </p>
+            </a>
+          </div>
+
+          <div>
+            <input
+                class="sendMessage border-orange-500 border w-4/5 h-10 rounded px-2"
+                type="text"
+            />
+            <button id="send" class="bg-orange-500 w-1/6 h-10 rounded-lg ml-2">
+              전송
+            </button>
+          </div>
         </div>
       </div>
     </section>
@@ -68,6 +85,8 @@
   <script type="text/javascript">
     const $chatting = document.querySelector(".chatting");
     const $send = document.getElementById("send");
+    const $sendMessageInput = document.querySelector('.sendMessage');
+    const $confirmed = document.querySelector('.confirmed');
     const sockJS = new SockJS("/stomp/chat");
     const stomp = Stomp.over(sockJS);
     const roomId = document.querySelector('.chatting').dataset.roomid;
@@ -83,6 +102,22 @@
       stomp.subscribe('/topic/room.' + roomId, (content) => {
         const response = JSON.parse(content.body);
 
+        console.log(response);
+
+        if(response.status == 'NOTICE') {
+          const $rootDiv = document.createElement('div');
+          const $div = document.createElement('div');
+          const $p =  document.createElement('p');
+          $div.classList = 'w-3/5 h-10 pt-1 text-center rounded-full bg-slate-200 flex-col mx-auto my-6';
+          $p.textContent = response.message;
+          $p.classList = 'pt-1';
+          $div.append($p);
+          $rootDiv.append($div)
+          $chatting.prepend($rootDiv);
+
+          return;
+        }
+
         if(response.memberId == memberId) {
           return;
         }
@@ -93,7 +128,7 @@
         $div.classList = 'text-left flex space-x-4 my-4';
         $img.src = response.profile;
         $img.classList = 'w-10 rounded-full';
-        $p.classList = 'bg-orange-500 text-white rounded-lg px-10 pt-2';
+        $p.classList = 'bg-orange-500 text-white rounded-lg px-10 pt-2 pb-2';
         $p.textContent = response.message;
         $div.append($img);
         $div.append($p);
@@ -101,20 +136,55 @@
         $chatting.prepend($div);
 
       }, {'auto-delete':true, 'durable':false, 'exclusive':false});
-
     });
 
     // 메시지 전송
     $send.addEventListener("click", () => {
+      sendMessage($sendMessageInput.value, 'MESSAGE');
+    });
+
+    $sendMessageInput.addEventListener('keyup', (e) => {
+      if(e.keyCode == 13) {
+        sendMessage($sendMessageInput.value, 'MESSAGE');
+      }
+    });
+
+    $confirmed.addEventListener('click', () => {
+      fetch('/item/confirmed/' + roomId, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+        .then(response => {
+          if(!response.ok) {
+            throw new Error('에러가 발생하였습니다.')
+          }
+          return response.json();
+        })
+        .then(data => {
+          stomp.send('/pub/chat.message.' + roomId , {}, JSON.stringify({
+            message: "상품 구매 확정이 되었습니다.",
+            memberId: memberId,
+            roomId: roomId,
+            messageStatus: 'NOTICE'
+          }));
+        })
+        .catch((error) => {
+          toast(error);
+        })
+    });
+
+    function sendMessage(message, messageStatus) {
       const $div = document.createElement("div");
       const $img = document.createElement("img");
       const $p = document.createElement("p");
-      const message = document.querySelector('.sendMessage').value;
-      document.querySelector('.sendMessage').value = '';
+      $sendMessageInput.value = '';
+
       $img.src = profile;
       $div.classList = "flex flex-row-reverse space-x-4 space-x-reverse my-4";
       $img.classList = "w-10 rounded-full";
-      $p.classList = "bg-orange-500 text-white rounded-lg px-10 pt-2";
+      $p.classList = "bg-orange-500 text-white rounded-lg px-10 pt-2 pb-2";
       $p.textContent = message;
       $div.append($img);
       $div.append($p);
@@ -125,9 +195,9 @@
         message: message,
         memberId: memberId,
         roomId: roomId,
+        messageStatus: messageStatus
       }));
-    });
+    }
   </script>
 </th:block>
-
 </html>

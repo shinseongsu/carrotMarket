@@ -142,13 +142,13 @@
                 <img th:class="'likes '+ ${itemInfo.isOwnerLikes ? 'active' : ''}" />
               </div>
               <div class="flex">
-                <p class="font-medium" th:text="${itemInfo.price}">1,000</p>원
+                <p class="font-medium" th:text="${#numbers.formatInteger(itemInfo.price, 0, 'COMMA')}">1,000</p>원
               </div>
             </div>
 
             <div>
-              <button th:if="${itemInfo.isOwnerItem}" class="chat_btn bg-orange-500 text-white px-10 py-2 rounded-lg" th:onclick="@{location.href='/item/edit/{itemId}'(itemId=${itemInfoDto.itemId})}">수정하기</button>
-              <button th:unless="${itemInfo.isOwnerItem}" class="chat_btn bg-orange-500 text-white px-10 py-2 rounded-lg" th:onclick="@{location.href='/chat/{itemId}'(itemId=${itemInfoDto.itemId})}">채팅하기</button>
+              <button th:if="${itemInfo.isOwnerItem}" class="chat_btn bg-orange-500 text-white px-10 py-2 rounded-lg" th:onclick="@{location.href='/item/edit/{itemId}'(itemId=${itemInfo.itemId})}">수정하기</button>
+              <button th:unless="${itemInfo.isOwnerItem}" class="chat_btn bg-orange-500 text-white px-10 py-2 rounded-lg" th:onclick="@{location.href='/chat/{itemId}'(itemId=${itemInfo.itemId})}">채팅하기</button>
             </div>
           </div>
         </div>
